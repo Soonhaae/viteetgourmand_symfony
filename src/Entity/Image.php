@@ -19,6 +19,10 @@ class Image
     #[ORM\Column(length: 255)]
     private ?string $altText = null;
 
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Menu $menus = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +48,18 @@ class Image
     public function setAltText(string $altText): static
     {
         $this->altText = $altText;
+
+        return $this;
+    }
+
+    public function getMenus(): ?Menu
+    {
+        return $this->menus;
+    }
+
+    public function setMenus(?Menu $menus): static
+    {
+        $this->menus = $menus;
 
         return $this;
     }

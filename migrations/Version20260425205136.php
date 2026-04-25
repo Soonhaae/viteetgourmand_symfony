@@ -14,7 +14,7 @@ final class Version20260425205136 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'relation ManyToMany entre Menu et Plat';
+        return 'create relation ManyToMany entre Menu et Plat';
     }
 
     public function up(Schema $schema): void
