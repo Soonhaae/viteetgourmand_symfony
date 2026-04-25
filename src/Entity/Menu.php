@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MenuRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,17 @@ class Menu
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $conditions = null;
+
+    /**
+     * @var Collection<int, Plat>
+     */
+    #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'menus')]
+    private Collection $plats;
+
+    public function __construct()
+    {
+        $this->plats = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +133,30 @@ class Menu
     public function setConditions(string $conditions): static
     {
         $this->conditions = $conditions;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Plat>
+     */
+    public function getPlats(): Collection
+    {
+        return $this->plats;
+    }
+
+    public function addPlat(Plat $plat): static
+    {
+        if (!$this->plats->contains($plat)) {
+            $this->plats->add($plat);
+        }
+
+        return $this;
+    }
+
+    public function removePlat(Plat $plat): static
+    {
+        $this->plats->removeElement($plat);
 
         return $this;
     }
