@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\MenuStatus;
 use App\Repository\MenuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -54,6 +55,9 @@ class Menu
      */
     #[ORM\ManyToMany(targetEntity: Regime::class, inversedBy: 'menus')]
     private Collection $regimes;
+
+    #[ORM\Column(enumType: MenuStatus::class)]
+    private ?MenuStatus $status = null;
 
     
     public function getId(): ?int
@@ -219,6 +223,18 @@ class Menu
     public function removeRegime(Regime $regime): static
     {
         $this->regimes->removeElement($regime);
+
+        return $this;
+    }
+
+    public function getStatus(): ?MenuStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(MenuStatus $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
