@@ -55,20 +55,7 @@ class Menu
     #[ORM\ManyToMany(targetEntity: Regime::class, inversedBy: 'menus')]
     private Collection $regimes;
 
-    /**
-     * @var Collection<int, Allergene>
-     */
-    #[ORM\ManyToMany(targetEntity: Allergene::class, inversedBy: 'menus')]
-    private Collection $allergenes;
-
-    public function __construct()
-    {
-        $this->plats = new ArrayCollection();
-        $this->images = new ArrayCollection();
-        $this->regimes = new ArrayCollection();
-        $this->allergenes = new ArrayCollection();
-    }
-
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -236,27 +223,5 @@ class Menu
         return $this;
     }
 
-    /**
-     * @return Collection<int, Allergene>
-     */
-    public function getAllergenes(): Collection
-    {
-        return $this->allergenes;
-    }
-
-    public function addAllergene(Allergene $allergene): static
-    {
-        if (!$this->allergenes->contains($allergene)) {
-            $this->allergenes->add($allergene);
-        }
-
-        return $this;
-    }
-
-    public function removeAllergene(Allergene $allergene): static
-    {
-        $this->allergenes->removeElement($allergene);
-
-        return $this;
-    }
+    
 }
