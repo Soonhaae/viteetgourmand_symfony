@@ -32,9 +32,16 @@ class Plat
     #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'plats')]
     private Collection $menus;
 
+    /**
+     * @var Collection<int, Allergene>
+     */
+    #[ORM\ManyToMany(targetEntity: Allergene::class, inversedBy: 'plats')]
+    private Collection $allergenes;
+
     public function __construct()
     {
         $this->menus = new ArrayCollection();
+        $this->allergenes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,6 +108,30 @@ class Plat
         if ($this->menus->removeElement($menu)) {
             $menu->removePlat($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Allergene>
+     */
+    public function getAllergenes(): Collection
+    {
+        return $this->allergenes;
+    }
+
+    public function addAllergene(Allergene $allergene): static
+    {
+        if (!$this->allergenes->contains($allergene)) {
+            $this->allergenes->add($allergene);
+        }
+
+        return $this;
+    }
+
+    public function removeAllergene(Allergene $allergene): static
+    {
+        $this->allergenes->removeElement($allergene);
 
         return $this;
     }

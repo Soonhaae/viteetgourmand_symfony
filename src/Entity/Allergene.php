@@ -18,6 +18,17 @@ class Allergene
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
+    /**
+     * @var Collection<int, Plat>
+     */
+    #[ORM\ManyToMany(targetEntity: Plat::class, mappedBy: 'allergenes')]
+    private Collection $plats;
+
+    public function __construct()
+    {
+        $this->plats = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -32,6 +43,33 @@ class Allergene
     public function setName(?string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Plat>
+     */
+    public function getPlats(): Collection
+    {
+        return $this->plats;
+    }
+
+    public function addPlat(Plat $plat): static
+    {
+        if (!$this->plats->contains($plat)) {
+            $this->plats->add($plat);
+            $plat->addAllergene($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlat(Plat $plat): static
+    {
+        if ($this->plats->removeElement($plat)) {
+            $plat->removeAllergene($this);
+        }
 
         return $this;
     }
