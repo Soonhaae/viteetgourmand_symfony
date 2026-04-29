@@ -22,12 +22,14 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
+                default_target_path: app_account
                 enable_csrf: true
             logout:
                 path: app_logout
                 # where to redirect after logout
                 # target: app_any_route
-
+            switch_user: true
+            
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -36,8 +38,30 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+          
+        # require ROLE_SUPER_ADMIN for /super-admin*
+        - { path: '^/super-admin', roles: ROLE_SUPER_ADMIN }
+        
+        # require ROLE_ADMIN for /admin*
+        - { path: '^/admin', roles: ROLE_ADMIN }
+
+        # require ROLE_EMPLOYEE for /gestion*
+        - { path: '^/gestion', roles: ROLE_EMPLOYEE }
+
+        # require ROLE_USER for /commandes*
+        - { path: '^/commandes', roles: ROLE_USER }
+
+        # require tous les connectés/authentifiés for /mon-compte*
+        - { path: '^/mon-compte', roles: IS_AUTHENTICATED_FULLY }
+
+
+
+    # hierarchy inherits permissions from other roles
+    role_hierarchy:
+        ROLE_EMPLOYEE:   ROLE_USER
+        ROLE_ADMIN:       ROLE_EMPLOYEE
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
 
 when@test:
     security:
