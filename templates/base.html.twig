@@ -18,7 +18,30 @@
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+<body>
+
+    <nav>
+        {# {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('app_commandes') }}">Mes commandes</a>
+        {% endif %}
+
+        {% if is_granted('ROLE_EMPLOYEE') %}
+            <a href="{{ path('app_gestion') }}">Gestion</a>
+        {% endif %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_admin') }}">Administration</a>
+        {% endif %} #}
+        
+        {% if app.user %}
+            <a href="{{ path('app_account') }}">Mon compte</a>
+            <a href="{{ path('app_logout') }}">Déconnexion</a>
+        {% else %}
+            <a href="{{ path('app_login') }}">Connexion</a>
+        {% endif %}
+    </nav>
+
+    {% block body %}{% endblock %}
+
+</body>
 </html>
