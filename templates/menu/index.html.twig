@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menu index{% endblock %}
+
+{% block body %}
+    <h1>Menu index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Theme</th>
+                <th>Regime</th>
+                <th>Content</th>
+                <th>MinPersons</th>
+                <th>Price</th>
+                <th>Conditions</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for menu in menus %}
+            <tr>
+                <td>{{ menu.id }}</td>
+                <td>{{ menu.title }}</td>
+                <td>{{ menu.theme }}</td>
+                <td>{{ menu.regime }}</td>
+                <td>{{ menu.content }}</td>
+                <td>{{ menu.minPersons }}</td>
+                <td>{{ menu.price }}</td>
+                <td>{{ menu.conditions }}</td>
+                <td>{{ menu.status }}</td>
+                <td>
+                    <a href="{{ path('app_menu_show', {'id': menu.id}) }}">show</a>
+                    <a href="{{ path('app_menu_edit', {'id': menu.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                {# colspan = nbr total de colonnes du tableau, si je modifie le tableau, ça pourrait poser pbm #}
+                <td colspan="10">Pas de menu trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_menu_new') }}">Create new</a>
+{% endblock %}
