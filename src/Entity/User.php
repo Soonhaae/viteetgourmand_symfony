@@ -161,7 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->postalAdress;
     }
 
-    public function setPostalAddress(string $postalAdress): static
+    public function setPostalAdress(string $postalAdress): static
     {
         $this->postalAdress = $postalAdress;
 
