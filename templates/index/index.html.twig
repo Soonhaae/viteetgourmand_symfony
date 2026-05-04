@@ -1,31 +1,120 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello IndexController!{% endblock %}
+{% block title %}Accueil - Vite&Gourmand{% endblock %}
 
 {% block body %}
 
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
+<main class="page-bg main">
 
+    <div class="container page-inner">
 
-    <div class="example-wrapper">
-        <h1>Hello {{ controller_name }}! ✅</h1>
+        <div class="separation darker"></div>
 
-        <h2>Liste des menus</h2>
+        <!-- BLOC 1 -->
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">Une entreprise aux petits oignons</h2>
 
-        {% if menus is empty %}
-            <p>Aucun menu pour le moment</p>
-        
-        {% else %}
-            <ul>
-                {% for menu in menus %}
-                    <li>{{ menu.title }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+            <div class="section-block-top">
+
+                <div class="section-text-card">
+                    <p>
+                        <span class="marque">Vite&Gourmand</span> régale Bordeaux et ses alentours avec une cuisine généreuse,
+                        authentique et pleine de saveurs.
+                    </p>
+                </div>
+
+                <div class="photo-wrapper">
+                    <div class="photo-back"></div>
+                    <div class="photo-front">
+                        <img src="{{ asset('img/ui/duo.png') }}" alt="Équipe Vite&Gourmand">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="section-block-bottom">
+
+                <div class="photo-wrapper">
+                    <div class="photo-back"></div>
+                    <div class="photo-front">
+                        <img src="{{ asset('img/ui/table_mariage.jpg') }}" alt="Table mariage">
+                    </div>
+                </div>
+
+                <div class="section-text-card">
+                    <p>
+                        Traiteur de proximité, <span class="marque">Vite&Gourmand</span> accompagne tous vos événements.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="separation dark"></div>
+
+        <!-- BLOC 2 -->
+        <section class="section-block section-alt">
+            <h2 class="section-title-center">Nos équipes à votre service</h2>
+
+            <div class="section-block-top">
+
+                <div class="photo-wrapper">
+                    <div class="photo-back"></div>
+                    <div class="photo-front">
+                        <img src="{{ asset('img/ui/equipe_cuisine.png') }}" alt="Équipe cuisine">
+                    </div>
+                </div>
+
+                <div class="section-text-card">
+                    <p>
+                        Chez <span class="marque">Vite&Gourmand</span>, le professionnalisme repose sur trois équipes.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="section-block-bottom">
+
+                <div class="section-text-card">
+                    <p><strong>L’équipe logistique</strong> organise tout.</p>
+                    <p><strong>L’équipe livraison</strong> assure la ponctualité.</p>
+                </div>
+
+                <div class="photo-wrapper">
+                    <div class="photo-back"></div>
+                    <div class="photo-front">
+                        <img src="{{ asset('img/ui/les_deux_equipes.png') }}" alt="Équipes">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="separation shadow"></div>
+
+        <!-- BLOC 3 -->
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">Retours d’expérience</h2>
+
+            <div class="reviews-grid">
+
+                <article class="review-card">
+                    <h3 class="review-title">Noël 2025</h3>
+                    <p class="review-stars">★★★★★</p>
+                    <p class="review-text">“Excellent service.”</p>
+                </article>
+
+                <article class="review-card">
+                    <h3 class="review-title">Entreprise N.</h3>
+                    <p class="review-stars">★★★★★</p>
+                    <p class="review-text">“Très professionnel.”</p>
+                </article>
+
+            </div>
+        </section>
 
     </div>
+
+</main>
 
 {% endblock %}
