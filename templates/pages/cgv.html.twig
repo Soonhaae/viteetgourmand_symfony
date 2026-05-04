@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CGV{% endblock %}
+
+{% block body %}
+
+<main class="container main py-5">
+    <div class="page-inner">
+
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">1. Commandes et minimum de personnes</h2>
+            <p>
+                Chaque menu indique un nombre minimum de personnes requis. Les commandes doivent respecter ce minimum pour être validées.
+            </p>
+        </section>
+
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">2. Modification et annulation</h2>
+            <p>
+                Pour changer de menu commandé, le client doit annuler puis repasser une commande.
+                Une commande peut être annulée tant qu’elle n’a pas été validée (statut "acceptée").<br>
+                Les modifications possibles après validation concernent uniquement le lieu, la date ou l’horaire.
+            </p>
+        </section>
+
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">3. Remises</h2>
+            <p>
+                Si le nombre de convives dépasse de 5 personnes le minimum requis, une remise de 10% est appliquée.
+            </p>
+        </section>
+
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">4. Livraison</h2>
+            <p>
+                Livraison :<br>
+                - Bordeaux intra-muros : 5€<br>
+                - Hors Bordeaux : 0,59€ par km
+            </p>
+        </section>
+
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">5. Matériel prêté</h2>
+            <p>
+                Le matériel doit être retourné sous 10 jours après réception du mail de retour.<br>
+                Passé ce délai, des frais de 600€ peuvent être appliqués.
+            </p>
+        </section>
+
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">6. Responsabilité</h2>
+            <p>
+                Vite&Gourmand décline toute responsabilité en cas d’événements indépendants de sa volonté (météo, retards externes…).
+            </p>
+        </section>
+
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">7. Données personnelles</h2>
+            <p>
+                Conformément au RGPD, vous disposez d’un droit d’accès, de rectification et de suppression des données vous concernant.
+                Contact : contact@viteetgourmand.fr
+            </p>
+        </section>
+
+        <section class="section-block section-tight">
+            <h2 class="section-title-center">8. Litiges</h2>
+            <p>
+                En cas de litige, une solution amiable sera recherchée. À défaut, les tribunaux français sont compétents.
+            </p>
+        </section>
+
+    </div>
+</main>
+
+{% endblock %}
