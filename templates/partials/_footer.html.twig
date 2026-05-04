@@ -1,0 +1,27 @@
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div class="footer-left">
+            <a href="{{ path('app_mentions_legales') }}" class="footer-link">mentions légales</a>
+            <a href="{{ path('app_cgv') }}" class="footer-link">conditions générales de vente</a>
+            <span class="footer-link">© <span class="underline-text">2026</span></span>
+        </div>
+
+        <div class="footer-center">
+            <a href="{{ path('app_contact') }}" class="footer-link">
+                <img src="{{ asset('img/icons/envelope.svg') }}" alt="" class="icon-contact">
+                contact
+            </a>
+        </div>
+
+        <div class="footer-right">
+            <p class="footer-hours-title">
+                <img src="{{ asset('img/icons/time.svg') }}" alt="" class="icon-contact">
+                nos horaires :
+            </p>
+            <p class="footer-hours">
+                du lundi au vendredi de 10h à 20h<br>
+                samedi et dimanche de 12h à 16h
+            </p>
+        </div>
+    </div>
+</footer>

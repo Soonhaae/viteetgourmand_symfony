@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact - Vite&Gourmand{% endblock %}
+
+{% block body %}
+
+<main class="container main py-5">
+
+    <div class="page-inner">
+
+        <section class="section-block section-tight">
+
+            <h2 class="section-title-center">Contactez-nous</h2>
+
+            <p class="text-center mb-4">
+                Vous pouvez nous envoyer vos questions ou demandes via ce formulaire.
+            </p>
+
+            {# message Symfony (si je le passes depuis controller plus tard) #}
+            {% if messageEnvoye is defined %}
+                <div class="alert alert-info text-center">
+                    {{ messageEnvoye }}
+                </div>
+            {% endif %}
+
+            <form method="POST" class="mx-auto contact-form">
+
+                <div class="mb-3">
+                    <label for="titre" class="form-label">Titre</label>
+                    <input type="text" id="titre" name="titre" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Message</label>
+                    <textarea id="description" name="description" rows="5" class="form-control" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Envoyer
+                </button>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</main>
+
+{% endblock %}

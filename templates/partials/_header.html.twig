@@ -1,0 +1,72 @@
+<header class="topbar">
+    <div class="container topbar-inner">
+
+        <nav class="topnav" aria-label="Navigation principale">
+
+            <a href="{{ path('app_index') }}" class="topnav-link">
+                <img src="{{ asset('img/icons/homepage.svg') }}" class="icon-contact">
+                accueil
+            </a>
+
+            <a href="{{ path('app_menu_index') }}" class="topnav-link">
+                <img src="{{ asset('img/icons/couverts.svg') }}" class="icon-contact">
+                menus
+            </a>
+
+            <a href="{{ path('app_contact') }}" class="topnav-link">
+                <img src="{{ asset('img/icons/envelope.svg') }}" class="icon-contact">
+                contact
+            </a>
+
+            {# --- PARTIE AUTH --- #}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_admin') }}" class="topnav-link">
+                    admin
+                </a>
+            {% endif %}
+
+            {% if is_granted('ROLE_EMPLOYEE') %}
+                <a href="{{ path('app_gestion') }}" class="topnav-link">
+                    gestion
+                </a>
+            {% endif %}
+
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('app_account') }}" class="topnav-link">
+                    mon compte
+                </a>
+            {% endif %}
+
+            {% if app.user %}
+                <a href="{{ path('app_logout') }}" class="topnav-link">
+                    déconnexion
+                </a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="topnav-link">
+                    connexion
+                </a>
+            {% endif %}
+
+        </nav>
+
+    </div>
+</header>
+
+<section class="hero-banner">
+  <div class="container hero-inner">
+    <div class="logo-card">
+      <div class="logo-wrapper">
+        <div class="logo-back"></div>
+        <div class="logo-front">
+          <img src="{{ asset('img/logo/logo.svg') }}" alt="logo Vite&Gourmand">
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-title-block">
+      <h1 class="hero-title">Le traiteur de tous vos événements</h1>
+      <p class="hero-subtitle">depuis 25 ans</p>
+    </div>
+  </div>
+</section>

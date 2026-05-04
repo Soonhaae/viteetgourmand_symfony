@@ -10,7 +10,7 @@ use App\Entity\Menu;
 
 final class IndexController extends AbstractController
 {
-    #[Route('/', name: 'index')]
+    #[Route('/', name: 'app_index')]
     public function index(EntityManagerInterface $em): Response
     {
         $menus = $em->getRepository(Menu::class)->findAll();
