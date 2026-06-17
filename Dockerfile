@@ -36,15 +36,17 @@ COPY . .
 
 # pour éviter d'exécuter le conteneur en tant que root (ce qui est une mauvaise pratique), je crée un utilisateur "symfony" et je lui donne les droits sur le dossier de travail
 RUN useradd -m symfony \
+    # ça crée un utilisateur "symfony" (qui correspondra à un identifiant système, un ID, mais que je ne connais pas mais docker fonctionne avec des ID, pas des noms)
+    # et puis ça va aussi créerr (-m) le home directory s'il est inexistant (/home/symfony) car chauq eutilisateur a un "espace personnel" (avec fichiers config, clés SSH, cache, historique shell, etc.).
     && mkdir -p /var/www/html/var \
     && chown -R symfony:symfony /var/www/html
 
 # mkdir -p /var/www/html/var → ça crée le dossier var/
-# chown -R symfony:symfony /var/www/html → ça donne les droits sur tout le projet à l'utilisateur symfony
+# chown -R symfony:symfony /var/www/html → ça donne les droits (la propriété des fichiers) sur tout le projet à l'utilisateur symfony
 
 
 USER symfony
-
+# donc php + composer tourent avec cet utilisateur "symfony" et non plus avec root (=bonne pratique de sécurité)
 
 RUN composer install
 # pour installer les dépendances PHP du projet (Symfony) en utilisant Composer
