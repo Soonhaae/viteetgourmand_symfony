@@ -17,9 +17,9 @@ services:
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
       # You should definitely change the password in production
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-m2psymfony123}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-app_dev_password}
       MYSQL_USER: ${MYSQL_USER:-app}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_dev_password}
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 5s
