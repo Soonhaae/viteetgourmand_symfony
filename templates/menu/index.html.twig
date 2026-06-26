@@ -31,7 +31,7 @@
                 <td>{{ menu.minPersons }}</td>
                 <td>{{ menu.price }}</td>
                 <td>{{ menu.conditions }}</td>
-                <td>{{ menu.status }}</td>
+                <td>{{ menu.status ? menu.status.label : '?' }}</td>
                 <td>
                     <a href="{{ path('app_menu_show', {'id': menu.id}) }}">show</a>
                     <a href="{{ path('app_menu_edit', {'id': menu.id}) }}">edit</a>
