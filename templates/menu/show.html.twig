@@ -46,6 +46,60 @@
                 </tbody>
             </table>
 
+            <section class="menu-detail-section">
+                <h2>Régimes</h2>
+                {% if menu.regimes is not empty %}
+                    <ul class="menu-detail-tags">
+                        {% for regime in menu.regimes %}
+                            <li>{{ regime.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Aucun régime renseigné.</p>
+                {% endif %}
+            </section>
+
+            <section class="menu-detail-section">
+                <h2>Plats</h2>
+                {% if menu.plats is not empty %}
+                    <div class="menu-detail-items">
+                        {% for plat in menu.plats %}
+                            <article class="menu-detail-item">
+                                <h3>{{ plat.name }}</h3>
+                                <p>{{ plat.description }}</p>
+                                <p class="menu-detail-meta">{{ plat.type ? plat.type.value : 'type non renseigné' }}</p>
+
+                                {% if plat.allergenes is not empty %}
+                                    <p class="menu-detail-allergenes">
+                                        Allergènes :
+                                        {% for allergene in plat.allergenes %}
+                                            <span>{{ allergene.name }}</span>{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                {% else %}
+                                    <p class="menu-detail-allergenes">Aucun allergène renseigné.</p>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Aucun plat associé.</p>
+                {% endif %}
+            </section>
+
+            <section class="menu-detail-section">
+                <h2>Images</h2>
+                {% if menu.images is not empty %}
+                    <div class="menu-detail-gallery">
+                        {% for image in menu.images %}
+                            <img src="{{ image.url }}" alt="{{ image.altText }}">
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Aucune image associée.</p>
+                {% endif %}
+            </section>
+
             <div class="menu-form-actions">
                 <a href="{{ path('app_menu_edit', {'id': menu.id}) }}" class="btn btn-soft">modifier</a>
                 {{ include('menu/_delete_form.html.twig') }}
