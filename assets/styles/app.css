@@ -28,10 +28,16 @@ html, body {
 body {
   background: var(--bg);
   font-family: var(--font);
-  font-style: italic;
   color: var(--text-main);
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+}
+
+.hero-banner,
+.page-bg,
+.site-footer {
+  font-style: italic;
 }
 
 /* Structure globale */
@@ -205,6 +211,198 @@ body {
 .footer-link {
   color: var(--primary);
   text-decoration: underline;
+}
+
+/* buttons */
+.btn-primary,
+.btn-primary:focus {
+  background-color: var(--shadow);
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary);
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+.btn-outline-primary,
+.btn-outline-primary:focus {
+  border-color: var(--darker);
+  color: var(--darker);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+.btn-outline-secondary {
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--primary);
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+.btn-danger,
+.btn-danger:focus {
+  background-color: var(--shadow);
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+.btn-danger:hover {
+  background-color: var(--primary);
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+.btn-soft,
+.btn-soft:focus {
+  background-color: #e0cb8f;
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+.btn-soft:hover {
+  background-color: var(--secondary);
+  border-color: var(--shadow);
+  color: var(--darker);
+}
+
+/* menu forms */
+.menu-form-page {
+  padding: 5rem 0 7rem;
+}
+
+.menu-form-card {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--primary);
+  border: 1px solid var(--darker);
+}
+
+.menu-form-card h1 {
+  margin-bottom: 3rem;
+  text-align: center;
+  font-style: normal;
+}
+
+.menu-entity-number {
+  color: var(--text-main);
+  font-style: normal;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.menu-number-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.25rem;
+  border-radius: 50%;
+  background: var(--shadow);
+  color: var(--darker);
+  font-weight: 700;
+}
+
+.menu-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.menu-delete-form {
+  margin: 0;
+  display: inline-flex;
+}
+
+.menu-form-card .form-check {
+  margin-bottom: 0.4rem;
+}
+
+.menu-form-card .form-check-label {
+  margin-left: 0.25rem;
+}
+
+/* menu list */
+.menu-list-page {
+  padding: 5rem 0 7rem;
+}
+
+.menu-list-card {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--primary);
+  border: 1px solid var(--darker);
+}
+
+.menu-list-card h1 {
+  margin-bottom: 3rem;
+  text-align: center;
+  font-style: normal;
+}
+
+.menu-table-actions,
+.menu-list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.menu-table-button {
+  min-width: 5.5rem;
+  color: var(--darker);
+}
+
+.menu-status-cell {
+  color: var(--darker);
+}
+
+.menu-list-card th:nth-child(7),
+.menu-list-card td:nth-child(7) {
+  padding-right: 1.75rem;
+}
+
+.menu-list-actions {
+  margin-top: 1.5rem;
+}
+
+/* menu show */
+.menu-show-page {
+  padding: 5rem 0 7rem;
+}
+
+.menu-show-card {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--primary);
+  border: 1px solid var(--darker);
+}
+
+.menu-show-card h1 {
+  margin-bottom: 3rem;
+  text-align: center;
+  font-style: normal;
+}
+
+.menu-show-card th {
+  width: 14rem;
 }
 
 

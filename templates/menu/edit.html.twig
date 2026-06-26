@@ -1,13 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Menu{% endblock %}
+{% block title %}Modifier un menu{% endblock %}
 
 {% block body %}
-    <h1>Edition</h1>
+    <main class="container main menu-form-page">
+        <div class="menu-form-card">
+            <h1>Modifier un menu</h1>
 
-    {{ include('menu/_form.html.twig', {'button_label': 'Update'}) }}
+            <p class="menu-entity-number">menu n° <span class="menu-number-badge">{{ menu.id }}</span></p>
 
-    <a href="{{ path('app_menu_index') }}">Retour à la liste</a>
+            {{ include('menu/_form.html.twig', {'form_id': 'menu-form-edit'}) }}
 
-    {{ include('menu/_delete_form.html.twig') }}
+            <div class="menu-form-actions">
+                <button class="btn btn-primary btn-soft" type="submit" form="menu-form-edit">mettre à jour</button>
+                {{ include('menu/_delete_form.html.twig') }}
+                <a href="{{ path('app_menu_index') }}" class="btn btn-outline-secondary">retour à la liste</a>
+            </div>
+        </div>
+    </main>
 {% endblock %}

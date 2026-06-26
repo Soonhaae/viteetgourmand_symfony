@@ -1,50 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Menu index{% endblock %}
+{% block title %}Liste des menus{% endblock %}
 
 {% block body %}
-    <h1>Menu index</h1>
+    <main class="container main menu-list-page">
+        <div class="menu-list-card">
+            <h1>Liste des menus</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Theme</th>
-                <th>Regime</th>
-                <th>Content</th>
-                <th>MinPersons</th>
-                <th>Price</th>
-                <th>Conditions</th>
-                <th>Status</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for menu in menus %}
-            <tr>
-                <td>{{ menu.id }}</td>
-                <td>{{ menu.title }}</td>
-                <td>{{ menu.theme }}</td>
-                <td>{{ menu.regime }}</td>
-                <td>{{ menu.content }}</td>
-                <td>{{ menu.minPersons }}</td>
-                <td>{{ menu.price }}</td>
-                <td>{{ menu.conditions }}</td>
-                <td>{{ menu.status ? menu.status.label : '?' }}</td>
-                <td>
-                    <a href="{{ path('app_menu_show', {'id': menu.id}) }}">show</a>
-                    <a href="{{ path('app_menu_edit', {'id': menu.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                {# colspan = nbr total de colonnes du tableau, si je modifie le tableau, ça pourrait poser pbm #}
-                <td colspan="10">Pas de menu trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>n°</th>
+                            <th>Titre</th>
+                            <th>Thème</th>
+                            <th>Description</th>
+                            <th class="text-center">Nbr pers. min.</th>
+                            <th>Prix</th>
+                            <th>Conditions</th>
+                            <th>Infos suppl.</th>
+                            <th>Statut</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for menu in menus %}
+                        <tr>
+                            <td class="text-center"><span class="menu-number-badge">{{ menu.id }}</span></td>
+                            <td>{{ menu.title }}</td>
+                            <td>{{ menu.theme }}</td>
+                            <td>{{ menu.content }}</td>
+                            <td class="text-center">{{ menu.minPersons }}</td>
+                            <td>{{ menu.price }}</td>
+                            <td>{{ menu.conditions }}</td>
+                            <td>{{ menu.regime }}</td>
+                            <td class="menu-status-cell">{{ menu.status ? menu.status.label : '?' }}</td>
+                            <td>
+                                <div class="menu-table-actions">
+                                    <a class="btn btn-sm btn-soft menu-table-button" href="{{ path('app_menu_show', {'id': menu.id}) }}">voir</a>
+                                    <a class="btn btn-sm btn-primary menu-table-button" href="{{ path('app_menu_edit', {'id': menu.id}) }}">modifier</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="11">Aucun menu trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-    <a href="{{ path('app_menu_new') }}">Create new</a>
+            <div class="menu-list-actions">
+                <a class="btn btn-primary" href="{{ path('app_menu_new') }}">créer un menu</a>
+            </div>
+        </div>
+    </main>
 {% endblock %}
