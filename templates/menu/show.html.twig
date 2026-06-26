@@ -92,7 +92,7 @@
                 {% if menu.images is not empty %}
                     <div class="menu-detail-gallery">
                         {% for image in menu.images %}
-                            <img src="{{ image.url }}" alt="{{ image.altText }}">
+                            <img src="{{ asset(image.url) }}" alt="{{ image.altText }}">
                         {% endfor %}
                     </div>
                 {% else %}

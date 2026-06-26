@@ -187,8 +187,8 @@ INSERT INTO `plat_allergene` (`plat_id`, `allergene_id`) VALUES
 -- --------------------------------------------------------
 
 INSERT INTO `image` (`id`, `url`, `alt_text`, `menus_id`) VALUES
-(1, '/assets/img/menus/menu-brunch.png', 'Buffet brunch sucré salé avec pains, tartinades, fruits et bouchées maison', 5),
-(2, '/assets/img/menus/menu-gouter-anniversaire.png', 'Table de goûter d’anniversaire avec gâteau, douceurs et boissons fruitées', 6),
-(3, '/assets/img/menus/menu-cocktail.png', 'Cocktail dînatoire avec verrines, canapés et pièces salées variées', 7),
-(4, '/assets/img/menus/menu-vegetarien.png', 'Menu végétarien coloré avec légumes rôtis, céréales et dessert fruité', 8),
-(5, '/assets/img/menus/menu-fete.png', 'Menu de fêtes d’hiver avec entrée raffinée, plat généreux et dessert chocolaté', 9);
+(1, 'img/menus/menu-brunch.png', 'Buffet brunch sucré salé avec pains, tartinades, fruits et bouchées maison', 5),
+(2, 'img/menus/menu-gouter-anniversaire.png', 'Table de goûter d’anniversaire avec gâteau, douceurs et boissons fruitées', 6),
+(3, 'img/menus/menu-cocktail.png', 'Cocktail dînatoire avec verrines, canapés et pièces salées variées', 7),
+(4, 'img/menus/menu-vegetarien.png', 'Menu végétarien coloré avec légumes rôtis, céréales et dessert fruité', 8),
+(5, 'img/menus/menu-fete.png', 'Menu de fêtes d’hiver avec entrée raffinée, plat généreux et dessert chocolaté', 9);
