@@ -12,16 +12,16 @@ INSERT INTO `allergene` (`id`, `name`) VALUES
 
 -- --------------------------------------------------------
 
-INSERT INTO `menu` (`id`, `title`, `theme`, `regime`, `content`, `min_persons`, `price`, `conditions`, `status`) VALUES
-(1, 'Menu Noël Familial', 'noel', NULL, 'Menu festif pour les fêtes de fin d’année', 6, 35.50, 'Commande 48h minimum avant', 'publie'),
-(2, 'Menu Pâques Printanier', 'paques', NULL, 'Saveurs du printemps pour Pâques', 4, 28.00, 'Livraison Bordeaux intra-muros uniquement', 'publie'),
-(3, 'Menu Événement Pro', 'evenement', NULL, 'Pour vos séminaires et cocktails', 10, 42.00, 'Réservation 7 jours avant', 'publie'),
-(4, 'Menu Vegan Saisonnier', 'classique', 'Sans viande, sans poisson et sans lactose', '100% végétal et gourmand', 4, 32.00, 'Stock limité', 'publie'),
-(5, 'Menu Brunch Bordelais', 'classique', 'Options végétariennes disponibles', 'Buffet sucré-salé avec pains, tartinades, bouchées fraîches et douceurs maison', 8, 24.90, 'Commande 72h minimum avant. Livraison possible le samedi et le dimanche matin.', 'publie'),
-(6, 'Menu Après-midi Anniversaire', 'evenement', 'Adaptable pour enfants et adultes', 'Goûter gourmand avec pièces sucrées, boissons fraîches et bouchées faciles à partager', 10, 18.50, 'Commande 5 jours avant. Personnalisation du gâteau sur demande.', 'publie'),
-(7, 'Menu Cocktail Dînatoire', 'evenement', 'Format buffet avec options sans viande', 'Assortiment de verrines, canapés, pièces chaudes et desserts individuels pour vos réceptions', 15, 39.00, 'Réservation 7 jours avant. Service sur place disponible sur devis.', 'publie'),
-(8, 'Menu Végétarien Gourmand', 'classique', 'Sans viande et sans poisson', 'Menu complet autour des légumes de saison, céréales gourmandes et desserts fruités', 6, 29.50, 'Commande 72h minimum avant. Adaptation sans gluten possible selon stock.', 'publie'),
-(9, 'Menu Fêtes d’Hiver', 'noel', 'Menu festif avec alternatives végétariennes', 'Recettes généreuses pour repas de fin d’année, avec entrées raffinées et desserts de saison', 8, 46.00, 'Réservation 10 jours avant. Quantités limitées en décembre.', 'publie');
+INSERT INTO `menu` (`id`, `title`, `theme`, `regime`, `content`, `min_persons`, `price`, `stock_available`, `conditions`, `status`) VALUES
+(1, 'Menu Noël Familial', 'noel', NULL, 'Menu festif pour les fêtes de fin d’année', 6, 35.50, 12, 'Commande 48h minimum avant', 'publie'),
+(2, 'Menu Pâques Printanier', 'paques', NULL, 'Saveurs du printemps pour Pâques', 4, 28.00, 18, 'Livraison Bordeaux intra-muros uniquement', 'publie'),
+(3, 'Menu Événement Pro', 'evenement', NULL, 'Pour vos séminaires et cocktails', 10, 42.00, 8, 'Réservation 7 jours avant', 'publie'),
+(4, 'Menu Vegan Saisonnier', 'classique', 'Sans viande, sans poisson et sans lactose', '100% végétal et gourmand', 4, 32.00, 10, 'Stock limité', 'publie'),
+(5, 'Menu Brunch Bordelais', 'classique', 'Options végétariennes disponibles', 'Buffet sucré-salé avec pains, tartinades, bouchées fraîches et douceurs maison', 8, 24.90, 20, 'Commande 72h minimum avant. Livraison possible le samedi et le dimanche matin.', 'publie'),
+(6, 'Menu Après-midi Anniversaire', 'evenement', 'Adaptable pour enfants et adultes', 'Goûter gourmand avec pièces sucrées, boissons fraîches et bouchées faciles à partager', 10, 18.50, 16, 'Commande 5 jours avant. Personnalisation du gâteau sur demande.', 'publie'),
+(7, 'Menu Cocktail Dînatoire', 'evenement', 'Format buffet avec options sans viande', 'Assortiment de verrines, canapés, pièces chaudes et desserts individuels pour vos réceptions', 15, 39.00, 6, 'Réservation 7 jours avant. Service sur place disponible sur devis.', 'publie'),
+(8, 'Menu Végétarien Gourmand', 'classique', 'Sans viande et sans poisson', 'Menu complet autour des légumes de saison, céréales gourmandes et desserts fruités', 6, 29.50, 14, 'Commande 72h minimum avant. Adaptation sans gluten possible selon stock.', 'publie'),
+(9, 'Menu Fêtes d’Hiver', 'noel', 'Menu festif avec alternatives végétariennes', 'Recettes généreuses pour repas de fin d’année, avec entrées raffinées et desserts de saison', 8, 46.00, 5, 'Réservation 10 jours avant. Quantités limitées en décembre.', 'publie');
 
 -- --------------------------------------------------------
 

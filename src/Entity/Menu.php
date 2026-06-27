@@ -35,6 +35,9 @@ class Menu
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private ?int $stockAvailable = 0;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $conditions = null;
 
@@ -143,6 +146,18 @@ class Menu
     public function setPrice(string $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getStockAvailable(): ?int
+    {
+        return $this->stockAvailable;
+    }
+
+    public function setStockAvailable(int $stockAvailable): static
+    {
+        $this->stockAvailable = $stockAvailable;
 
         return $this;
     }

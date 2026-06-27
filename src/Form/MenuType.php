@@ -36,6 +36,12 @@ class MenuType extends AbstractType
                 'label' => 'Prix',
                 'currency' => 'EUR',
             ])
+            ->add('stockAvailable', IntegerType::class, [
+                'label' => 'Stock disponible',
+                'attr' => [
+                    'min' => 0,
+                ],
+            ])
             ->add('conditions', null, [
                 'label' => 'Conditions',
             ])

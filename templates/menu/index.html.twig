@@ -17,6 +17,7 @@
                             <th>Description</th>
                             <th class="text-center">Nbr pers. min.</th>
                             <th>Prix</th>
+                            <th class="text-center">Stock</th>
                             <th>Conditions</th>
                             <th>Infos suppl.</th>
                             <th>Statut</th>
@@ -32,6 +33,7 @@
                             <td>{{ menu.content }}</td>
                             <td class="text-center">{{ menu.minPersons }}</td>
                             <td>{{ menu.price }}</td>
+                            <td class="text-center">{{ menu.stockAvailable }}</td>
                             <td>{{ menu.conditions }}</td>
                             <td>{{ menu.regime }}</td>
                             <td class="menu-status-cell">{{ menu.status ? menu.status.label : '?' }}</td>
@@ -44,7 +46,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="11">Aucun menu trouvé</td>
+                            <td colspan="12">Aucun menu trouvé</td>
                         </tr>
                     {% endfor %}
                     </tbody>
