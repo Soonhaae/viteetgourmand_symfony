@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block body %}
+    <main class="container main order-page">
+        <div class="order-card">
+            <h1>Mes commandes</h1>
+
+            {% if commandes is not empty %}
+                <div class="customer-orders">
+                    {% for commande in commandes %}
+                        <details class="customer-order-card {{ commande.status == 'terminée' ? 'is-finished' : '' }}">
+                            <summary class="customer-order-summary">
+                                <span>
+                                    <span class="customer-order-number">commande n° {{ commande.id }}</span>
+                                    <span class="customer-order-date">du {{ commande.date|date('d/m/Y, H:i') }}</span>
+                                </span>
+                                <span class="customer-order-status">{{ commande.status }}</span>
+                                <span class="customer-order-toggle">détails <span aria-hidden="true">▾</span></span>
+                            </summary>
+
+                            <div class="customer-order-details">
+                                <h2>{{ commande.menu.title }}</h2>
+                                <p>{{ commande.nbPers }} personnes · {{ commande.totalPrice }} € hors livraison</p>
+                                <table class="table table-striped align-middle">
+                                    <tbody>
+                                        <tr>
+                                            <th>Conditions du menu</th>
+                                            <td>{{ commande.menu.conditions }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <section class="order-status-section">
+                                    <h3>Suivi de commande</h3>
+                                    <ol class="order-status-list">
+                                        {% set steps = ['en attente', 'acceptée', 'en préparation', 'en cours de livraison', 'livrée', 'terminée'] %}
+                                        {% for step in steps %}
+                                            <li class="{{ step == commande.status ? 'is-current' : '' }}">{{ step }}</li>
+                                        {% endfor %}
+                                    </ol>
+                                </section>
+                            </div>
+                        </details>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Vous n’avez pas encore passé de commande.</p>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

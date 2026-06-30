@@ -6,6 +6,7 @@ use App\Entity\Commande;
 use App\Entity\Menu;
 use App\Entity\User;
 use App\Form\CommandeType;
+use App\Repository\CommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,21 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/commandes')]
 final class CommandeController extends AbstractController
 {
+    #[Route(name: 'app_commande_index', methods: ['GET'])]
+    public function index(CommandeRepository $commandeRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('commande/index.html.twig', [
+            'commandes' => $commandeRepository->findForUser($user),
+        ]);
+    }
+
     #[Route('/nouvelle/{id}', name: 'app_commande_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
     {
@@ -50,7 +66,7 @@ final class CommandeController extends AbstractController
 
             $this->addFlash('success', 'Votre commande a bien été enregistrée.');
 
-            return $this->redirectToRoute('app_account', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('commande/new.html.twig', [
