@@ -585,6 +585,36 @@ body {
   border-radius: 8px;
 }
 
+/* login */
+.login-page {
+  padding: 5rem 0 7rem;
+}
+
+.login-card {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--primary);
+  border: 1px solid var(--darker);
+}
+
+.login-card h1 {
+  margin-bottom: 2rem;
+  text-align: center;
+  font-style: normal;
+}
+
+.login-card label {
+  margin-bottom: 0.35rem;
+  color: var(--darker);
+  font-weight: 600;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: center;
+}
+
 
 /* RESPONSIVE !! */
 @media (max-width: 900px) {
