@@ -216,6 +216,15 @@ body {
 /* buttons */
 .btn-primary,
 .btn-primary:focus {
+  --bs-btn-bg: var(--shadow);
+  --bs-btn-border-color: var(--shadow);
+  --bs-btn-color: var(--darker);
+  --bs-btn-hover-bg: var(--primary);
+  --bs-btn-hover-border-color: var(--shadow);
+  --bs-btn-hover-color: var(--darker);
+  --bs-btn-active-bg: var(--primary);
+  --bs-btn-active-border-color: var(--shadow);
+  --bs-btn-active-color: var(--darker);
   background-color: var(--shadow);
   border-color: var(--shadow);
   color: var(--darker);
@@ -580,9 +589,98 @@ body {
 }
 
 .order-menu-summary {
+  margin-bottom: 2rem;
   padding: 1.5rem;
   background: var(--secondary);
   border-radius: 8px;
+}
+
+.order-form {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.order-help {
+  color: var(--darker);
+}
+
+.order-price-details,
+.order-conditions-box {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--secondary);
+  border-radius: 8px;
+}
+
+.order-price-details h2,
+.order-conditions-box h2 {
+  margin-bottom: 0.75rem;
+  color: var(--darker);
+  font-size: 1.2rem;
+  font-style: normal;
+}
+
+.order-price-details h2 {
+  text-align: center;
+}
+
+.order-price-details p,
+.order-conditions-box p {
+  margin-bottom: 0.5rem;
+}
+
+.order-price-table {
+  width: 100%;
+}
+
+.order-price-table th,
+.order-price-table td {
+  padding: 0.45rem 0;
+}
+
+.order-price-table th {
+  width: 70%;
+  color: var(--text-main);
+  font-weight: 400;
+}
+
+.order-price-table td {
+  width: 30%;
+  color: var(--darker);
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.order-total {
+  color: var(--darker);
+  font-size: 1.15rem;
+}
+
+.order-form .form-check {
+  margin-top: 1rem;
+}
+
+.order-form .form-check-label {
+  margin-left: 0.25rem;
+}
+
+.order-conditions-acceptance {
+  margin-top: 1rem;
+}
+
+.order-conditions-acceptance .mb-3 {
+  margin-bottom: 0 !important;
+}
+
+.order-conditions-acceptance .form-check {
+  margin-top: 0;
+}
+
+.order-unavailable {
+  border-color: var(--shadow);
+  background: #f7edcf;
+  color: var(--darker);
 }
 
 /* login */
@@ -613,6 +711,28 @@ body {
 .login-actions {
   display: flex;
   justify-content: center;
+}
+
+.login-card .form-check {
+  margin-bottom: 1.5rem;
+}
+
+.login-card .form-check-label {
+  margin-left: 0.25rem;
+}
+
+.password-toggle {
+  margin-top: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--darker);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.password-toggle:hover {
+  color: var(--text-main);
 }
 
 

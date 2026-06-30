@@ -20,9 +20,62 @@
                 </p>
             </section>
 
-            <div class="menu-form-actions">
-                <a href="{{ path('app_public_menu_index') }}" class="btn btn-outline-secondary">retour aux menus</a>
-            </div>
+            {% if canOrder %}
+                {{ form_start(form, {'attr': {
+                    'class': 'order-form js-order-form',
+                    'data-menu-price': menu.price,
+                    'data-min-persons': menu.minPersons,
+                    'data-discount-threshold': menu.minPersons + 5,
+                    'data-discount-rate': '0.10'
+                }}) }}
+                    {{ form_row(form.nbPers) }}
+
+                    <section class="order-price-details" aria-live="polite">
+                        <h2>Détail du prix</h2>
+                        <table class="order-price-table">
+                            <tbody>
+                                <tr>
+                                    <th>Prix du menu pour {{ menu.minPersons }} personnes</th>
+                                    <td>{{ menu.price }} €</td>
+                                </tr>
+                                <tr class="js-order-subtotal-row d-none">
+                                    <th>Prix avant remise</th>
+                                    <td><span class="js-order-subtotal">{{ menu.price }}</span> €</td>
+                                </tr>
+                                <tr class="js-order-discount-row d-none">
+                                    <th>Remise de 10%</th>
+                                    <td>-<span class="js-order-discount">0.00</span> €</td>
+                                </tr>
+                                <tr class="order-total">
+                                    <th>Total estimé hors livraison</th>
+                                    <td><span class="js-order-total">{{ menu.price }}</span> €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="order-conditions-box">
+                        <h2>Conditions du menu</h2>
+                        <p>{{ menu.conditions }}</p>
+                        <div class="order-conditions-acceptance">
+                            {{ form_row(form.conditionsAccepted) }}
+                        </div>
+                    </section>
+
+                    <div class="menu-form-actions">
+                        <button class="btn btn-primary" type="submit">valider la commande</button>
+                        <a href="{{ path('app_public_menu_index') }}" class="btn btn-outline-secondary">retour aux menus</a>
+                    </div>
+                {{ form_end(form) }}
+            {% else %}
+                <div class="alert alert-warning order-unavailable">
+                    Ce menu n’est plus disponible à la commande pour le moment.
+                </div>
+
+                <div class="menu-form-actions">
+                    <a href="{{ path('app_public_menu_index') }}" class="btn btn-outline-secondary">retour aux menus</a>
+                </div>
+            {% endif %}
         </div>
     </main>
 {% endblock %}
