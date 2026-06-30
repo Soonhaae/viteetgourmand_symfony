@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livraison de la commande{% endblock %}
+
+{% block body %}
+    <main class="container main order-page">
+        <div class="order-card">
+            <h1>Livraison de la commande</h1>
+
+            <section class="order-menu-summary">
+                <h2>{{ menu.title }}</h2>
+                <p>{{ commande.nbPers }} personnes · {{ commande.totalPrice }} € hors livraison</p>
+                <p class="order-conditions">Conditions acceptées : {{ commande.conditionsAccepted ? 'oui' : 'non' }}</p>
+            </section>
+
+            <section class="order-customer-summary">
+                <h2>Informations client</h2>
+                <dl>
+                    <div>
+                        <dt>Nom</dt>
+                        <dd>{{ customer.lastname }}</dd>
+                    </div>
+                    <div>
+                        <dt>Prénom</dt>
+                        <dd>{{ customer.firstname }}</dd>
+                    </div>
+                    <div>
+                        <dt>Email</dt>
+                        <dd>{{ customer.email }}</dd>
+                    </div>
+                    <div>
+                        <dt>GSM</dt>
+                        <dd>{{ customer.phone }}</dd>
+                    </div>
+                </dl>
+                <p class="order-help">Ces informations viennent de votre compte.</p>
+            </section>
+
+            {{ form_start(form, {'attr': {'class': 'order-form'}}) }}
+                <section class="order-delivery-fields">
+                    <h2>Prestation et livraison</h2>
+                    <div class="order-form-grid">
+                        {{ form_row(form.prestationDate) }}
+                        {{ form_row(form.prestationTime) }}
+                        {{ form_row(form.deliveryAddress) }}
+                        {{ form_row(form.deliveryPostalCode) }}
+                        {{ form_row(form.deliveryCity) }}
+                    </div>
+                    {{ form_row(form.deliveryDetails) }}
+                </section>
+
+                <section class="order-price-details" aria-live="polite">
+                    <h2>Récapitulatif du prix</h2>
+                    <table class="order-price-table">
+                        <tbody>
+                            <tr>
+                                <th>Total menu hors livraison</th>
+                                <td>{{ commande.totalPrice }} €</td>
+                            </tr>
+                            <tr class="order-total">
+                                <th>Livraison</th>
+                                <td>à calculer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <div class="menu-form-actions">
+                    <button class="btn btn-primary" type="submit">valider la commande</button>
+                    <a href="{{ path('app_commande_new', {'id': menu.id}) }}" class="btn btn-outline-secondary">retour à la commande</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
+{% endblock %}

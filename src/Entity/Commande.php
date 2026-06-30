@@ -32,6 +32,24 @@ class Commande
     #[ORM\Column(options: ['default' => false])]
     private ?bool $hiddenFromCustomer = false;
 
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $prestationDate = null;
+
+    #[ORM\Column(type: Types::TIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $prestationTime = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $deliveryAddress = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $deliveryPostalCode = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $deliveryCity = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $deliveryDetails = null;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Menu $menu = null;
@@ -113,6 +131,78 @@ class Commande
     public function setHiddenFromCustomer(bool $hiddenFromCustomer): static
     {
         $this->hiddenFromCustomer = $hiddenFromCustomer;
+
+        return $this;
+    }
+
+    public function getPrestationDate(): ?\DateTimeImmutable
+    {
+        return $this->prestationDate;
+    }
+
+    public function setPrestationDate(?\DateTimeImmutable $prestationDate): static
+    {
+        $this->prestationDate = $prestationDate;
+
+        return $this;
+    }
+
+    public function getPrestationTime(): ?\DateTimeImmutable
+    {
+        return $this->prestationTime;
+    }
+
+    public function setPrestationTime(?\DateTimeImmutable $prestationTime): static
+    {
+        $this->prestationTime = $prestationTime;
+
+        return $this;
+    }
+
+    public function getDeliveryAddress(): ?string
+    {
+        return $this->deliveryAddress;
+    }
+
+    public function setDeliveryAddress(?string $deliveryAddress): static
+    {
+        $this->deliveryAddress = $deliveryAddress;
+
+        return $this;
+    }
+
+    public function getDeliveryPostalCode(): ?string
+    {
+        return $this->deliveryPostalCode;
+    }
+
+    public function setDeliveryPostalCode(?string $deliveryPostalCode): static
+    {
+        $this->deliveryPostalCode = $deliveryPostalCode;
+
+        return $this;
+    }
+
+    public function getDeliveryCity(): ?string
+    {
+        return $this->deliveryCity;
+    }
+
+    public function setDeliveryCity(?string $deliveryCity): static
+    {
+        $this->deliveryCity = $deliveryCity;
+
+        return $this;
+    }
+
+    public function getDeliveryDetails(): ?string
+    {
+        return $this->deliveryDetails;
+    }
+
+    public function setDeliveryDetails(?string $deliveryDetails): static
+    {
+        $this->deliveryDetails = $deliveryDetails;
 
         return $this;
     }

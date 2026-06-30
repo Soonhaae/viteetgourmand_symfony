@@ -605,7 +605,9 @@ body {
 }
 
 .order-price-details,
-.order-conditions-box {
+.order-conditions-box,
+.order-delivery-fields,
+.order-customer-summary {
   margin-bottom: 1.5rem;
   padding: 1rem;
   background: var(--secondary);
@@ -613,7 +615,9 @@ body {
 }
 
 .order-price-details h2,
-.order-conditions-box h2 {
+.order-conditions-box h2,
+.order-delivery-fields h2,
+.order-customer-summary h2 {
   margin-bottom: 0.75rem;
   color: var(--darker);
   font-size: 1.2rem;
@@ -627,6 +631,32 @@ body {
 .order-price-details p,
 .order-conditions-box p {
   margin-bottom: 0.5rem;
+}
+
+.order-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 1rem;
+}
+
+.order-form-grid > .mb-3:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.order-customer-summary dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.order-customer-summary dt {
+  color: var(--darker);
+  font-weight: 700;
+}
+
+.order-customer-summary dd {
+  margin-bottom: 0;
 }
 
 .order-price-table {
@@ -930,6 +960,14 @@ body {
   .customer-order-toggle {
     grid-column: 2;
     justify-self: end;
+  }
+
+  .order-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-customer-summary dl {
+    grid-template-columns: 1fr;
   }
 }
 

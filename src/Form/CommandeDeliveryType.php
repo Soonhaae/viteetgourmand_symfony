@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Commande;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
@@ -13,28 +12,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class CommandeEditType extends AbstractType
+class CommandeDeliveryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nbPers', IntegerType::class, [
-                'label' => 'Nombre de personnes',
-                'attr' => [
-                    'min' => $options['min_persons'],
-                    'max' => $options['max_persons'],
-                ],
-                'constraints' => [
-                    new Range(
-                        min: $options['min_persons'],
-                        max: $options['max_persons'],
-                        notInRangeMessage: 'Le nombre de personnes doit être compris entre {{ min }} et {{ max }}.'
-                    ),
-                ],
-            ])
             ->add('prestationDate', DateType::class, [
                 'label' => 'Date de prestation',
                 'widget' => 'single_text',
@@ -102,8 +86,6 @@ class CommandeEditType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Commande::class,
-            'min_persons' => 1,
-            'max_persons' => null,
         ]);
     }
 }

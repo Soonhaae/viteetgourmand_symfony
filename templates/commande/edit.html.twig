@@ -10,7 +10,7 @@
             <section class="order-menu-summary">
                 <p class="public-menu-theme">commande n° {{ commande.id }}</p>
                 <h2>{{ commande.menu.title }}</h2>
-                <p>Vous pouvez modifier uniquement le nombre de personnes tant que la commande est en attente.</p>
+                <p>Vous pouvez modifier le nombre de personnes et les informations de livraison tant que la commande est en attente.</p>
             </section>
 
             {{ form_start(form, {'attr': {
@@ -21,6 +21,18 @@
                 'data-discount-rate': '0.10'
             }}) }}
                 {{ form_row(form.nbPers) }}
+
+                <section class="order-delivery-fields">
+                    <h2>Livraison</h2>
+                    <div class="order-form-grid">
+                        {{ form_row(form.prestationDate) }}
+                        {{ form_row(form.prestationTime) }}
+                        {{ form_row(form.deliveryAddress) }}
+                        {{ form_row(form.deliveryPostalCode) }}
+                        {{ form_row(form.deliveryCity) }}
+                    </div>
+                    {{ form_row(form.deliveryDetails) }}
+                </section>
 
                 <section class="order-price-details" aria-live="polite">
                     <h2>Détail du prix</h2>

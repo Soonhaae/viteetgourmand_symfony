@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Commande;
 use App\Entity\Menu;
 use App\Entity\User;
+use App\Form\CommandeDeliveryType;
 use App\Form\CommandeEditType;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
@@ -37,7 +38,7 @@ final class CommandeController extends AbstractController
     }
 
     #[Route('/nouvelle/{id}', name: 'app_commande_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, Menu $menu): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -64,21 +65,79 @@ final class CommandeController extends AbstractController
         $form->handleRequest($request);
 
         if ($canOrder && $form->isSubmitted() && $form->isValid()) {
-            $commande->setTotalPrice($this->calculateTotalPrice($menu, $commande->getNbPers()));
-            $menu->setStockAvailable($menu->getStockAvailable() - $commande->getNbPers());
+            $request->getSession()->set($this->getOrderDraftSessionKey($menu), [
+                'nbPers' => $commande->getNbPers(),
+                'conditionsAccepted' => $commande->isConditionsAccepted(),
+            ]);
 
-            $entityManager->persist($commande);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Votre commande a bien été enregistrée.');
-
-            return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_commande_delivery', ['id' => $menu->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('commande/new.html.twig', [
             'menu' => $menu,
             'form' => $form,
             'canOrder' => $canOrder,
+        ]);
+    }
+
+    #[Route('/nouvelle/{id}/livraison', name: 'app_commande_delivery', methods: ['GET', 'POST'])]
+    public function delivery(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $sessionKey = $this->getOrderDraftSessionKey($menu);
+        $draft = $request->getSession()->get($sessionKey);
+
+        if (!is_array($draft) || !isset($draft['nbPers'])) {
+            $this->addFlash('warning', 'Veuillez d’abord choisir le nombre de personnes.');
+
+            return $this->redirectToRoute('app_commande_new', ['id' => $menu->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        $nbPers = (int) $draft['nbPers'];
+        if ($menu->getStockAvailable() < $nbPers) {
+            $request->getSession()->remove($sessionKey);
+            $this->addFlash('warning', 'Le stock disponible a changé. Veuillez vérifier votre commande.');
+
+            return $this->redirectToRoute('app_commande_new', ['id' => $menu->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        $commande = (new Commande())
+            ->setMenu($menu)
+            ->setUser($user)
+            ->setDate(new \DateTimeImmutable())
+            ->setStatus(self::STATUS_PENDING)
+            ->setNbPers($nbPers)
+            ->setTotalPrice($this->calculateTotalPrice($menu, $nbPers))
+            ->setConditionsAccepted((bool) ($draft['conditionsAccepted'] ?? false))
+        ;
+
+        $form = $this->createForm(CommandeDeliveryType::class, $commande);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $commande->setTotalPrice($this->calculateTotalPrice($menu, $commande->getNbPers()));
+            $menu->setStockAvailable($menu->getStockAvailable() - $commande->getNbPers());
+
+            $entityManager->persist($commande);
+            $entityManager->flush();
+
+            $request->getSession()->remove($sessionKey);
+            $this->addFlash('success', 'Votre commande a bien été enregistrée.');
+
+            return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('commande/delivery.html.twig', [
+            'menu' => $menu,
+            'commande' => $commande,
+            'customer' => $user,
+            'form' => $form,
         ]);
     }
 
@@ -158,6 +217,11 @@ final class CommandeController extends AbstractController
         }
 
         return number_format($totalPrice, 2, '.', '');
+    }
+
+    private function getOrderDraftSessionKey(Menu $menu): string
+    {
+        return 'order_draft_'.$menu->getId();
     }
 
     private function denyAccessToOtherCustomerOrder(Commande $commande): void

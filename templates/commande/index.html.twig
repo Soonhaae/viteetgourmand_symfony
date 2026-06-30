@@ -29,6 +29,33 @@
                                             <th>Conditions du menu</th>
                                             <td>{{ commande.menu.conditions }}</td>
                                         </tr>
+                                        <tr>
+                                            <th>Date de prestation</th>
+                                            <td>
+                                                {% if commande.prestationDate %}
+                                                    {{ commande.prestationDate|date('d/m/Y') }} à {{ commande.prestationTime ? commande.prestationTime|date('H:i') : 'heure non renseignée' }}
+                                                {% else %}
+                                                    non renseignée
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Adresse de livraison</th>
+                                            <td>
+                                                {% if commande.deliveryAddress %}
+                                                    {{ commande.deliveryAddress }}<br>
+                                                    {{ commande.deliveryPostalCode }} {{ commande.deliveryCity }}
+                                                {% else %}
+                                                    non renseignée
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% if commande.deliveryDetails %}
+                                            <tr>
+                                                <th>Précisions</th>
+                                                <td>{{ commande.deliveryDetails }}</td>
+                                            </tr>
+                                        {% endif %}
                                     </tbody>
                                 </table>
 
@@ -48,7 +75,7 @@
 
                                 <div class="customer-order-actions">
                                     {% if commande.status == 'en attente' %}
-                                        <a class="btn btn-soft" href="{{ path('app_commande_edit', {'id': commande.id}) }}">modifier la quantité</a>
+                                        <a class="btn btn-soft" href="{{ path('app_commande_edit', {'id': commande.id}) }}">modifier la commande</a>
                                         <form method="post" action="{{ path('app_commande_cancel', {'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous annuler cette commande ?');">
                                             <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ commande.id) }}">
                                             <button class="btn btn-danger" type="submit">annuler la commande</button>
