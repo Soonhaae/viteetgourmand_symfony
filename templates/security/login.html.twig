@@ -25,6 +25,9 @@
             <div class="mb-4">
                 <label for="password">Mot de passe</label>
                 <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                <button class="password-toggle" type="button" data-password-toggle="password">
+                    afficher le mot de passe
+                </button>
             </div>
 
             <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
