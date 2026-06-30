@@ -34,13 +34,32 @@
 
                                 <section class="order-status-section">
                                     <h3>Suivi de commande</h3>
-                                    <ol class="order-status-list">
-                                        {% set steps = ['en attente', 'acceptée', 'en préparation', 'en cours de livraison', 'livrée', 'terminée'] %}
-                                        {% for step in steps %}
-                                            <li class="{{ step == commande.status ? 'is-current' : '' }}">{{ step }}</li>
-                                        {% endfor %}
-                                    </ol>
+                                    {% if commande.status == 'annulée' %}
+                                        <p class="order-cancelled-note">Cette commande a été annulée.</p>
+                                    {% else %}
+                                        <ol class="order-status-list">
+                                            {% set steps = ['en attente', 'acceptée', 'en préparation', 'en cours de livraison', 'livrée', 'terminée'] %}
+                                            {% for step in steps %}
+                                                <li class="{{ step == commande.status ? 'is-current' : '' }}">{{ step }}</li>
+                                            {% endfor %}
+                                        </ol>
+                                    {% endif %}
                                 </section>
+
+                                <div class="customer-order-actions">
+                                    {% if commande.status == 'en attente' %}
+                                        <a class="btn btn-soft" href="{{ path('app_commande_edit', {'id': commande.id}) }}">modifier la quantité</a>
+                                        <form method="post" action="{{ path('app_commande_cancel', {'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous annuler cette commande ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ commande.id) }}">
+                                            <button class="btn btn-danger" type="submit">annuler la commande</button>
+                                        </form>
+                                    {% elseif commande.status in ['annulée', 'terminée'] %}
+                                        <form method="post" action="{{ path('app_commande_hide', {'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous masquer cette commande de votre espace client ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('hide' ~ commande.id) }}">
+                                            <button class="btn btn-outline-secondary" type="submit">masquer de mon compte</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
                             </div>
                         </details>
                     {% endfor %}

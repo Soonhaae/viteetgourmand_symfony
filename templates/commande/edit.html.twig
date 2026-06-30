@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la commande{% endblock %}
+
+{% block body %}
+    <main class="container main order-page">
+        <div class="order-card">
+            <h1>Modifier la commande</h1>
+
+            <section class="order-menu-summary">
+                <p class="public-menu-theme">commande n° {{ commande.id }}</p>
+                <h2>{{ commande.menu.title }}</h2>
+                <p>Vous pouvez modifier uniquement le nombre de personnes tant que la commande est en attente.</p>
+            </section>
+
+            {{ form_start(form, {'attr': {
+                'class': 'order-form js-order-form',
+                'data-menu-price': commande.menu.price,
+                'data-min-persons': commande.menu.minPersons,
+                'data-discount-threshold': commande.menu.minPersons + 5,
+                'data-discount-rate': '0.10'
+            }}) }}
+                {{ form_row(form.nbPers) }}
+
+                <section class="order-price-details" aria-live="polite">
+                    <h2>Détail du prix</h2>
+                    <table class="order-price-table">
+                        <tbody>
+                            <tr>
+                                <th>Prix du menu pour {{ commande.menu.minPersons }} personnes</th>
+                                <td>{{ commande.menu.price }} €</td>
+                            </tr>
+                            <tr class="js-order-subtotal-row d-none">
+                                <th>Prix avant remise</th>
+                                <td><span class="js-order-subtotal">{{ commande.totalPrice }}</span> €</td>
+                            </tr>
+                            <tr class="js-order-discount-row d-none">
+                                <th>Remise de 10%</th>
+                                <td>-<span class="js-order-discount">0.00</span> €</td>
+                            </tr>
+                            <tr class="order-total">
+                                <th>Total estimé hors livraison</th>
+                                <td><span class="js-order-total">{{ commande.totalPrice }}</span> €</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <div class="menu-form-actions">
+                    <button class="btn btn-primary" type="submit">enregistrer les modifications</button>
+                    <a href="{{ path('app_commande_index') }}" class="btn btn-outline-secondary">retour à mes commandes</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
+{% endblock %}

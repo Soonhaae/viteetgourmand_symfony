@@ -26,6 +26,7 @@ class CommandeRepository extends ServiceEntityRepository
             ->addSelect('m')
             ->join('c.menu', 'm')
             ->andWhere('c.user = :user')
+            ->andWhere('c.hiddenFromCustomer = false')
             ->setParameter('user', $user)
             ->orderBy('c.date', 'DESC')
             ->getQuery()

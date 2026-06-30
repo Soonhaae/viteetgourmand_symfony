@@ -29,6 +29,9 @@ class Commande
     #[ORM\Column]
     private ?bool $conditionsAccepted = null;
 
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $hiddenFromCustomer = false;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Menu $menu = null;
@@ -98,6 +101,18 @@ class Commande
     public function setConditionsAccepted(bool $conditionsAccepted): static
     {
         $this->conditionsAccepted = $conditionsAccepted;
+
+        return $this;
+    }
+
+    public function isHiddenFromCustomer(): ?bool
+    {
+        return $this->hiddenFromCustomer;
+    }
+
+    public function setHiddenFromCustomer(bool $hiddenFromCustomer): static
+    {
+        $this->hiddenFromCustomer = $hiddenFromCustomer;
 
         return $this;
     }
