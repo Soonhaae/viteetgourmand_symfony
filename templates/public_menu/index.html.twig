@@ -76,6 +76,7 @@
                             <p class="public-menu-meta">
                                 {{ menu.minPersons }} pers. min. · {{ menu.price }} € · stock : {{ menu.stockAvailable }}
                             </p>
+                            <a href="{{ path('app_commande_new', {'id': menu.id}) }}" class="btn btn-primary">commander</a>
                         </div>
                     </article>
                 {% else %}

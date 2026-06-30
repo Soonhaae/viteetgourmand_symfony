@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle commande{% endblock %}
+
+{% block body %}
+    <main class="container main order-page">
+        <div class="order-card">
+            <h1>Nouvelle commande</h1>
+
+            <p class="order-intro">Vous êtes en train de commander :</p>
+
+            <section class="order-menu-summary">
+                <h2>{{ menu.title }}</h2>
+                <p>{{ menu.content }}</p>
+                <p class="public-menu-meta">
+                    {{ menu.minPersons }} pers. min. · {{ menu.price }} € · stock : {{ menu.stockAvailable }}
+                </p>
+                <p class="order-conditions">
+                    Conditions : {{ menu.conditions }}
+                </p>
+            </section>
+
+            <div class="menu-form-actions">
+                <a href="{{ path('app_public_menu_index') }}" class="btn btn-outline-secondary">retour aux menus</a>
+            </div>
+        </div>
+    </main>
+{% endblock %}

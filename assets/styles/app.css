@@ -551,6 +551,40 @@ body {
   font-weight: 700;
 }
 
+/* order flow */
+.order-page {
+  padding: 5rem 0 7rem;
+}
+
+.order-card {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--primary);
+  border: 1px solid var(--darker);
+}
+
+.order-card h1,
+.order-menu-summary h2 {
+  font-style: normal;
+}
+
+.order-card h1 {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.order-intro,
+.order-conditions {
+  color: var(--text-main);
+}
+
+.order-menu-summary {
+  padding: 1.5rem;
+  background: var(--secondary);
+  border-radius: 8px;
+}
+
 
 /* RESPONSIVE !! */
 @media (max-width: 900px) {
