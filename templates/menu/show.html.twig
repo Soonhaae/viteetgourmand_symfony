@@ -1,54 +1,114 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Menu{% endblock %}
+{% block title %}Détail du menu{% endblock %}
 
 {% block body %}
-    <h1>Menu</h1>
+    <main class="container main menu-show-page">
+        <div class="menu-show-card">
+            <h1>Détail du menu</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ menu.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ menu.title }}</td>
-            </tr>
-            <tr>
-                <th>Theme</th>
-                <td>{{ menu.theme }}</td>
-            </tr>
-            <tr>
-                <th>Regime</th>
-                <td>{{ menu.regime }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ menu.content }}</td>
-            </tr>
-            <tr>
-                <th>MinPersons</th>
-                <td>{{ menu.minPersons }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ menu.price }}</td>
-            </tr>
-            <tr>
-                <th>Conditions</th>
-                <td>{{ menu.conditions }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ menu.status }}</td>
-            </tr>
-        </tbody>
-    </table>
+            <p class="menu-entity-number">menu n° <span class="menu-number-badge">{{ menu.id }}</span></p>
 
-    <a href="{{ path('app_menu_index') }}">back to list</a>
+            <table class="table table-striped align-middle">
+                <tbody>
+                    <tr>
+                        <th>Titre</th>
+                        <td>{{ menu.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>Thème</th>
+                        <td>{{ menu.theme }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ menu.content }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nbr pers. min.</th>
+                        <td>{{ menu.minPersons }}</td>
+                    </tr>
+                    <tr>
+                        <th>Prix</th>
+                        <td>{{ menu.price }}</td>
+                    </tr>
+                    <tr>
+                        <th>Stock disponible</th>
+                        <td>{{ menu.stockAvailable }}</td>
+                    </tr>
+                    <tr>
+                        <th>Conditions</th>
+                        <td>{{ menu.conditions }}</td>
+                    </tr>
+                    <tr>
+                        <th>Infos suppl.</th>
+                        <td>{{ menu.regime }}</td>
+                    </tr>
+                    <tr>
+                        <th>Statut</th>
+                        <td class="menu-status-cell">{{ menu.status ? menu.status.label : '?' }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-    <a href="{{ path('app_menu_edit', {'id': menu.id}) }}">edit</a>
+            <section class="menu-detail-section">
+                <h2>Régimes</h2>
+                {% if menu.regimes is not empty %}
+                    <ul class="menu-detail-tags">
+                        {% for regime in menu.regimes %}
+                            <li>{{ regime.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Aucun régime renseigné.</p>
+                {% endif %}
+            </section>
 
-    {{ include('menu/_delete_form.html.twig') }}
+            <section class="menu-detail-section">
+                <h2>Plats</h2>
+                {% if menu.plats is not empty %}
+                    <div class="menu-detail-items">
+                        {% for plat in menu.plats %}
+                            <article class="menu-detail-item">
+                                <h3>{{ plat.name }}</h3>
+                                <p>{{ plat.description }}</p>
+                                <p class="menu-detail-meta">{{ plat.type ? plat.type.value : 'type non renseigné' }}</p>
+
+                                {% if plat.allergenes is not empty %}
+                                    <p class="menu-detail-allergenes">
+                                        Allergènes :
+                                        {% for allergene in plat.allergenes %}
+                                            <span>{{ allergene.name }}</span>{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                {% else %}
+                                    <p class="menu-detail-allergenes">Aucun allergène renseigné.</p>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Aucun plat associé.</p>
+                {% endif %}
+            </section>
+
+            <section class="menu-detail-section">
+                <h2>Images</h2>
+                {% if menu.images is not empty %}
+                    <div class="menu-detail-gallery">
+                        {% for image in menu.images %}
+                            <img src="{{ asset(image.url) }}" alt="{{ image.altText }}">
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Aucune image associée.</p>
+                {% endif %}
+            </section>
+
+            <div class="menu-form-actions">
+                <a href="{{ path('app_menu_edit', {'id': menu.id}) }}" class="btn btn-soft">modifier</a>
+                {{ include('menu/_delete_form.html.twig') }}
+                <a href="{{ path('app_menu_index') }}" class="btn btn-outline-secondary">retour à la liste</a>
+            </div>
+        </div>
+    </main>
 {% endblock %}

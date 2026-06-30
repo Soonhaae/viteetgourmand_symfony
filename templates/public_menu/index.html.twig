@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos menus{% endblock %}
+
+{% block body %}
+    <main class="container main public-menu-page">
+        <h1>Nos menus</h1>
+
+        <div class="public-menu-layout">
+            <aside class="public-menu-filters">
+                <h2>Filtres</h2>
+
+                <form class="menu-filters js-menu-filters" method="get" data-filter-url="{{ path('app_public_menu_filter') }}">
+                    <div>
+                        <label for="theme">Thème</label>
+                        <select id="theme" name="theme" class="form-select">
+                            <option value="">Tous</option>
+                            {% for theme in themes %}
+                                <option value="{{ theme }}" {{ filters.theme == theme ? 'selected' : '' }}>{{ theme }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="regime">Régime</label>
+                        <select id="regime" name="regime" class="form-select">
+                            <option value="">Tous</option>
+                            {% for regime in regimes %}
+                                <option value="{{ regime.id }}" {{ filters.regime == regime.id ? 'selected' : '' }}>{{ regime.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="minPersons">Nombre de personnes</label>
+                        <input id="minPersons" name="minPersons" class="form-control" type="number" min="1" value="{{ filters.minPersons }}">
+                    </div>
+
+                    <div>
+                        <label for="minPrice">Prix min.</label>
+                        <input id="minPrice" name="minPrice" class="form-control" type="number" min="0" step="0.01" value="{{ filters.minPrice }}">
+                    </div>
+
+                    <div>
+                        <label for="maxPrice">Prix max.</label>
+                        <input id="maxPrice" name="maxPrice" class="form-control" type="number" min="0" step="0.01" value="{{ filters.maxPrice }}">
+                    </div>
+
+                    <div class="menu-filter-check form-check">
+                        <input id="availableOnly" name="availableOnly" class="form-check-input" type="checkbox" value="1" {{ filters.availableOnly ? 'checked' : '' }}>
+                        <label class="form-check-label" for="availableOnly">En stock</label>
+                    </div>
+
+                    <div class="menu-filter-actions">
+                        <button class="btn btn-primary" type="submit">filtrer</button>
+                        <button class="btn btn-outline-secondary" type="reset">réinitialiser</button>
+                    </div>
+                </form>
+            </aside>
+
+            <section>
+                <div class="menu-filter-message alert alert-warning d-none" role="alert"></div>
+
+                <div class="public-menu-results js-menu-results" aria-label="Menus disponibles">
+                {% for menu in menus %}
+                    <article class="public-menu-card">
+                        {% set firstImage = menu.images|first %}
+                        {% if firstImage %}
+                            <img src="{{ asset(firstImage.url) }}" alt="{{ firstImage.altText }}">
+                        {% endif %}
+
+                        <div class="public-menu-card-body">
+                            <p class="public-menu-theme">{{ menu.theme }}</p>
+                            <h2>{{ menu.title }}</h2>
+                            <p>{{ menu.content }}</p>
+                            <p class="public-menu-meta">
+                                {{ menu.minPersons }} pers. min. · {{ menu.price }} € · stock : {{ menu.stockAvailable }}
+                            </p>
+                        </div>
+                    </article>
+                {% else %}
+                    <p>Aucun menu ne correspond aux critères.</p>
+                {% endfor %}
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}

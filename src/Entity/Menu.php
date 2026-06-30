@@ -35,6 +35,9 @@ class Menu
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private ?int $stockAvailable = 0;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $conditions = null;
 
@@ -59,7 +62,17 @@ class Menu
     #[ORM\Column(enumType: MenuStatus::class)]
     private ?MenuStatus $status = null;
 
-    
+
+    public function __construct() /* constructeur = quand il y a création d'un menu, ses listes de plats, images et régimes existent déjà, même si elles sont vides */
+    {
+        $this->plats = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->regimes = new ArrayCollection();
+        $this->status = MenuStatus::BROUILLON; /* par défaut, le status d'un menu est en "brouillon"*/
+    }
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -133,6 +146,18 @@ class Menu
     public function setPrice(string $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getStockAvailable(): ?int
+    {
+        return $this->stockAvailable;
+    }
+
+    public function setStockAvailable(int $stockAvailable): static
+    {
+        $this->stockAvailable = $stockAvailable;
 
         return $this;
     }
@@ -238,6 +263,4 @@ class Menu
 
         return $this;
     }
-
-    
 }
