@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Commande;
+use App\Entity\CommandeStatusHistory;
 use App\Entity\Menu;
 use App\Entity\User;
 use App\Form\CommandeDeliveryType;
@@ -132,6 +133,7 @@ final class CommandeController extends AbstractController
                     ->setDeliveryPrice($deliveryPrice)
                     ->setTotalPrice($this->calculateOrderTotalPrice($menuTotalPrice, $deliveryPrice))
                 ;
+                $commande->addStatusHistory($this->createStatusHistory($commande->getStatus()));
 
                 $menu->setStockAvailable($menu->getStockAvailable() - $commande->getNbPers());
 
@@ -277,6 +279,14 @@ final class CommandeController extends AbstractController
     private function getOrderDraftSessionKey(Menu $menu): string
     {
         return 'order_draft_'.$menu->getId();
+    }
+
+    private function createStatusHistory(string $status): CommandeStatusHistory
+    {
+        return (new CommandeStatusHistory())
+            ->setStatus($status)
+            ->setChangedAt(new \DateTimeImmutable())
+        ;
     }
 
     private function denyAccessToOtherCustomerOrder(Commande $commande): void

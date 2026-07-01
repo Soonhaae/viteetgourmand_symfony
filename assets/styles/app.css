@@ -899,7 +899,7 @@ body {
 
 .management-order-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -914,6 +914,24 @@ body {
 .management-status-form label {
   color: var(--darker);
   font-weight: 700;
+}
+
+.management-status-history {
+  display: grid;
+  gap: 0.35rem;
+  padding-left: 1.25rem;
+}
+
+.management-status-history li::marker {
+  color: var(--darker);
+}
+
+.management-status-history span {
+  display: block;
+}
+
+.management-status-history small {
+  color: var(--text-main);
 }
 
 /* login */

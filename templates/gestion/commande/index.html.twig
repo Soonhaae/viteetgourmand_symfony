@@ -49,6 +49,23 @@
                                         {% endif %}
                                     </p>
                                 </div>
+
+                                <div>
+                                    <h3>Suivi</h3>
+                                    {% if commande.statusHistories is not empty %}
+                                        <ol class="management-status-history">
+                                            {% for history in commande.statusHistories %}
+                                                <li>
+                                                    <span>{{ history.status }}</span>
+                                                    <small>{{ history.changedAt|date('d/m/Y, H:i') }}</small>
+                                                </li>
+                                            {% endfor %}
+                                        </ol>
+                                    {% else %}
+                                        <p>{{ commande.status }}</p>
+                                        <p>historique non disponible</p>
+                                    {% endif %}
+                                </div>
                             </div>
 
                             <form class="management-status-form" method="post" action="{{ path('app_gestion_commande_status', {'id': commande.id}) }}">

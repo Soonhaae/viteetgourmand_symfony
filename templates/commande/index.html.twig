@@ -84,12 +84,26 @@
                                     <h3>Suivi de commande</h3>
                                     {% if commande.status == 'annulée' %}
                                         <p class="order-cancelled-note">Cette commande a été annulée.</p>
+                                        {% if commande.statusHistories is not empty %}
+                                            <ol class="order-status-list">
+                                                {% for history in commande.statusHistories %}
+                                                    <li class="{{ history.status == commande.status ? 'is-current' : '' }}">
+                                                        {{ history.status }} · {{ history.changedAt|date('d/m/Y, H:i') }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ol>
+                                        {% endif %}
                                     {% else %}
                                         <ol class="order-status-list">
-                                            {% set steps = ['en attente', 'acceptée', 'en préparation', 'en cours de livraison', 'livrée', 'en attente du retour de matériel', 'terminée'] %}
-                                            {% for step in steps %}
-                                                <li class="{{ step == commande.status ? 'is-current' : '' }}">{{ step }}</li>
-                                            {% endfor %}
+                                            {% if commande.statusHistories is not empty %}
+                                                {% for history in commande.statusHistories %}
+                                                    <li class="{{ history.status == commande.status ? 'is-current' : '' }}">
+                                                        {{ history.status }} · {{ history.changedAt|date('d/m/Y, H:i') }}
+                                                    </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li class="is-current">{{ commande.status }} · date non disponible</li>
+                                            {% endif %}
                                         </ol>
                                     {% endif %}
                                 </section>

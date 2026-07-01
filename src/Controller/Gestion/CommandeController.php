@@ -3,6 +3,7 @@
 namespace App\Controller\Gestion;
 
 use App\Entity\Commande;
+use App\Entity\CommandeStatusHistory;
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,7 +51,17 @@ final class CommandeController extends AbstractController
             return $this->redirectToRoute('app_gestion_commande_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $commande->setStatus($status);
+        if ($commande->getStatus() !== $status) {
+            $commande
+                ->setStatus($status)
+                ->addStatusHistory(
+                    (new CommandeStatusHistory())
+                        ->setStatus($status)
+                        ->setChangedAt(new \DateTimeImmutable())
+                )
+            ;
+        }
+
         $entityManager->flush();
 
         $this->addFlash('success', 'Le statut de la commande a bien été mis à jour.');

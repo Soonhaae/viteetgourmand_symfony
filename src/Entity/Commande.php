@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommandeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -63,6 +65,18 @@ class Commande
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    /**
+     * @var Collection<int, CommandeStatusHistory>
+     */
+    #[ORM\OneToMany(targetEntity: CommandeStatusHistory::class, mappedBy: 'commande', cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OrderBy(['changedAt' => 'ASC'])]
+    private Collection $statusHistories;
+
+    public function __construct()
+    {
+        $this->statusHistories = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -257,6 +271,35 @@ class Commande
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommandeStatusHistory>
+     */
+    public function getStatusHistories(): Collection
+    {
+        return $this->statusHistories;
+    }
+
+    public function addStatusHistory(CommandeStatusHistory $statusHistory): static
+    {
+        if (!$this->statusHistories->contains($statusHistory)) {
+            $this->statusHistories->add($statusHistory);
+            $statusHistory->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStatusHistory(CommandeStatusHistory $statusHistory): static
+    {
+        if ($this->statusHistories->removeElement($statusHistory)) {
+            if ($statusHistory->getCommande() === $this) {
+                $statusHistory->setCommande(null);
+            }
+        }
 
         return $this;
     }
