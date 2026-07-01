@@ -34,11 +34,11 @@ class AvisType extends AbstractType
                 'label' => 'Commentaire',
                 'attr' => [
                     'rows' => 4,
-                    'maxlength' => 1000,
+                    'maxlength' => 500,
                 ],
                 'constraints' => [
                     new NotBlank(message: 'Veuillez écrire un commentaire.'),
-                    new Length(max: 1000, maxMessage: 'Le commentaire ne doit pas dépasser {{ limit }} caractères.'),
+                    new Length(max: 500, maxMessage: 'Le commentaire ne doit pas dépasser {{ limit }} caractères.'),
                 ],
             ])
         ;

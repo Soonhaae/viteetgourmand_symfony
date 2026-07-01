@@ -24,6 +24,15 @@ class Avis
     private ?bool $validated = false;
 
     #[ORM\Column]
+    private ?bool $refused = false;
+
+    #[ORM\Column]
+    private ?bool $published = false;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $publicExcerpt = null;
+
+    #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\OneToOne(inversedBy: 'avis')]
@@ -71,6 +80,42 @@ class Avis
     public function setValidated(bool $validated): static
     {
         $this->validated = $validated;
+
+        return $this;
+    }
+
+    public function isRefused(): ?bool
+    {
+        return $this->refused;
+    }
+
+    public function setRefused(bool $refused): static
+    {
+        $this->refused = $refused;
+
+        return $this;
+    }
+
+    public function isPublished(): ?bool
+    {
+        return $this->published;
+    }
+
+    public function setPublished(bool $published): static
+    {
+        $this->published = $published;
+
+        return $this;
+    }
+
+    public function getPublicExcerpt(): ?string
+    {
+        return $this->publicExcerpt;
+    }
+
+    public function setPublicExcerpt(?string $publicExcerpt): static
+    {
+        $this->publicExcerpt = $publicExcerpt;
 
         return $this;
     }

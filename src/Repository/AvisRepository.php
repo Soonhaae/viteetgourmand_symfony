@@ -15,4 +15,22 @@ class AvisRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Avis::class);
     }
+
+    /**
+     * @return Avis[]
+     */
+    public function findForManagement(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->addSelect('u', 'c', 'm')
+            ->join('a.user', 'u')
+            ->join('a.commande', 'c')
+            ->join('c.menu', 'm')
+            ->orderBy('a.validated', 'ASC')
+            ->addOrderBy('a.refused', 'ASC')
+            ->addOrderBy('a.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
