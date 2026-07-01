@@ -31,8 +31,21 @@ services:
       # - ./docker/db/data:/var/lib/mysql/data:rw
 ###< doctrine/doctrine-bundle ###
 
+###> doctrine/mongodb-odm-bundle ###
+  mongodb:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME:-mongo_root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-mongo_root_password}
+      MONGO_INITDB_DATABASE: ${MONGODB_DB:-app_mongo}
+    volumes:
+      - mongodb_data:/data/db:rw
+###< doctrine/mongodb-odm-bundle ###
+
 volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:
 ###< doctrine/doctrine-bundle ###
- 
+###> doctrine/mongodb-odm-bundle ###
+  mongodb_data:
+###< doctrine/mongodb-odm-bundle ###

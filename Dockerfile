@@ -2,8 +2,10 @@ FROM php:8.4-apache
 # comme php:8.4-fpm a déjà un CMD par défaut qui lance PHP-FPM, pas besoin de le redéfinir en indiquant "CMD ["php-fpm"]"
 
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev \
+    git unzip libzip-dev libssl-dev pkg-config \
     && docker-php-ext-install pdo pdo_mysql zip \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
     && a2enmod rewrite
 # "a2enmod rewrite" = pour activer le module Apache "rewrite" qui permet de réécrire les URLs (utile pour Symfony)
 
