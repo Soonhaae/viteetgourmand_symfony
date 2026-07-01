@@ -69,11 +69,11 @@ body {
 
 .topnav-link {
   color: var(--primary);
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .topnav-link.active {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 /* hero */
@@ -1252,7 +1252,7 @@ body {
 }
 
 
-/* RESPONSIVE !! */
+/* RESPONSIVE !!! TABLETTE ///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 @media (max-width: 900px) {
 
   .topbar-inner {
@@ -1356,7 +1356,41 @@ body {
   .management-filters {
     grid-template-columns: 1fr;
   }
+
+
+.photo-front .photo-focus-duo {
+  object-position: 20% center;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* RESPONSIVE !!! MOBILE  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 @media (max-width: 600px) {
 
@@ -1411,6 +1445,17 @@ body {
   .reviews-grid {
     grid-template-columns: 1fr;
   }
+
+  .photo-front .photo-focus-duo {
+    object-position: 35% center;
+  
+  }
+
+.equipe_cuisine {
+    object-position: 20% center;
+  }
+
+
 
 }
 
