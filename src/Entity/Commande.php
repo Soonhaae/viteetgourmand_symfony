@@ -58,6 +58,12 @@ class Commande
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $deliveryPrice = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $managementCancellationContact = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $managementCancellationReason = null;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Menu $menu = null;
@@ -247,6 +253,30 @@ class Commande
     public function setDeliveryPrice(?string $deliveryPrice): static
     {
         $this->deliveryPrice = $deliveryPrice;
+
+        return $this;
+    }
+
+    public function getManagementCancellationContact(): ?string
+    {
+        return $this->managementCancellationContact;
+    }
+
+    public function setManagementCancellationContact(?string $managementCancellationContact): static
+    {
+        $this->managementCancellationContact = $managementCancellationContact;
+
+        return $this;
+    }
+
+    public function getManagementCancellationReason(): ?string
+    {
+        return $this->managementCancellationReason;
+    }
+
+    public function setManagementCancellationReason(?string $managementCancellationReason): static
+    {
+        $this->managementCancellationReason = $managementCancellationReason;
 
         return $this;
     }

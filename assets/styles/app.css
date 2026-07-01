@@ -933,6 +933,14 @@ body {
   margin-top: 1rem;
 }
 
+.management-cancel-form {
+  display: grid;
+  grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+  margin-top: 0.75rem;
+}
+
 .management-status-form label {
   color: var(--darker);
   font-weight: 700;
@@ -954,6 +962,12 @@ body {
 
 .management-status-history small {
   color: var(--text-main);
+}
+
+.management-cancellation-note {
+  margin-top: 0.75rem;
+  color: var(--darker);
+  font-weight: 700;
 }
 
 /* login */
@@ -1087,6 +1101,7 @@ body {
 
   .management-order-grid,
   .management-status-form,
+  .management-cancel-form,
   .management-filters {
     grid-template-columns: 1fr;
   }

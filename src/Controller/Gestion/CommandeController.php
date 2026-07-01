@@ -77,4 +77,38 @@ final class CommandeController extends AbstractController
 
         return $this->redirectToRoute('app_gestion_commande_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/annuler', name: 'app_gestion_commande_cancel', methods: ['POST'])]
+    public function cancel(Request $request, Commande $commande, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isCsrfTokenValid('management_cancel'.$commande->getId(), $request->request->getString('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $contact = $request->request->getString('contact');
+        $reason = trim($request->request->getString('reason'));
+
+        if (!in_array($contact, ['GSM', 'email'], true) || $reason === '') {
+            $this->addFlash('danger', 'Le mode de contact et le motif d’annulation sont obligatoires.');
+
+            return $this->redirectToRoute('app_gestion_commande_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $commande
+            ->setStatus('annulée')
+            ->setManagementCancellationContact($contact)
+            ->setManagementCancellationReason($reason)
+            ->addStatusHistory(
+                (new CommandeStatusHistory())
+                    ->setStatus('annulée')
+                    ->setChangedAt(new \DateTimeImmutable())
+            )
+        ;
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'La commande a bien été annulée côté gestion.');
+
+        return $this->redirectToRoute('app_gestion_commande_index', [], Response::HTTP_SEE_OTHER);
+    }
 }

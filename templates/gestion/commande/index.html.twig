@@ -87,6 +87,12 @@
                                         <p>{{ commande.status }}</p>
                                         <p>historique non disponible</p>
                                     {% endif %}
+                                    {% if commande.managementCancellationReason %}
+                                        <p class="management-cancellation-note">
+                                            Annulation après contact {{ commande.managementCancellationContact }} :
+                                            {{ commande.managementCancellationReason }}
+                                        </p>
+                                    {% endif %}
                                 </div>
                             </div>
 
@@ -102,6 +108,22 @@
 
                                 <button class="btn btn-primary" type="submit">mettre à jour</button>
                             </form>
+
+                            {% if commande.status not in ['annulée', 'terminée'] %}
+                                <form class="management-cancel-form" method="post" action="{{ path('app_gestion_commande_cancel', {'id': commande.id}) }}" onsubmit="return confirm('Confirmer l’annulation côté gestion ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('management_cancel' ~ commande.id) }}">
+
+                                    <select name="contact" class="form-select" required aria-label="Mode de contact client">
+                                        <option value="">contact client</option>
+                                        <option value="GSM">GSM</option>
+                                        <option value="email">email</option>
+                                    </select>
+
+                                    <input class="form-control" type="text" name="reason" required placeholder="motif d’annulation">
+
+                                    <button class="btn btn-danger" type="submit">annuler côté gestion</button>
+                                </form>
+                            {% endif %}
                         </section>
                     {% endfor %}
                 </div>
