@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des avis{% endblock %}
+
+{% block body %}
+    <main class="container main management-page">
+        <div class="management-card">
+            <h1>Gestion des avis</h1>
+
+            {% if avis is not empty %}
+                <div class="management-orders">
+                    {% for review in avis %}
+                        <section class="management-order-card">
+                            <div class="management-order-header">
+                                <div>
+                                    <h2>avis commande n° {{ review.commande.id }}</h2>
+                                    <p>{{ review.createdAt|date('d/m/Y, H:i') }} · {{ review.user.firstname }} {{ review.user.lastname }}</p>
+                                </div>
+
+                                {% if review.published %}
+                                    <span class="management-status">publié</span>
+                                {% elseif review.validated %}
+                                    <span class="management-status">validé</span>
+                                {% elseif review.refused %}
+                                    <span class="management-status">refusé</span>
+                                {% else %}
+                                    <span class="management-status">en attente</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="management-order-grid">
+                                <div>
+                                    <h3>Menu</h3>
+                                    <p>{{ review.commande.menu.title }}</p>
+                                </div>
+
+                                <div>
+                                    <h3>Client</h3>
+                                    <p>{{ review.user.email }}</p>
+                                </div>
+
+                                <div>
+                                    <h3>Note</h3>
+                                    <p>{{ review.rating }}/5</p>
+                                </div>
+
+                                <div>
+                                    <h3>Commentaire</h3>
+                                    <p>{{ review.comment }}</p>
+                                </div>
+
+                                {% if review.publicExcerpt %}
+                                    <div>
+                                        <h3>Extrait publié</h3>
+                                        <p>{{ review.publicExcerpt }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="management-review-actions">
+                                <form method="post" action="{{ path('app_gestion_avis_validate', {'id': review.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('validate_avis' ~ review.id) }}">
+                                    <button class="btn btn-primary" type="submit">valider</button>
+                                </form>
+
+                                <form class="management-review-publish-form" method="post" action="{{ path('app_gestion_avis_publish', {'id': review.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('publish_avis' ~ review.id) }}">
+                                    <label for="publicExcerpt-{{ review.id }}">extrait public</label>
+                                    <textarea id="publicExcerpt-{{ review.id }}" name="publicExcerpt" rows="2" maxlength="255">{{ review.publicExcerpt ?? review.comment|slice(0, 255) }}</textarea>
+                                    <button class="btn btn-primary" type="submit">publier</button>
+                                </form>
+
+                                <form method="post" action="{{ path('app_gestion_avis_refuse', {'id': review.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('refuse_avis' ~ review.id) }}">
+                                    <button class="btn btn-danger" type="submit">refuser</button>
+                                </form>
+                            </div>
+                        </section>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Aucun avis à modérer pour le moment.</p>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

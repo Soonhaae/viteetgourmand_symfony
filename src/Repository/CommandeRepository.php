@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Commande;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,20 +17,58 @@ class CommandeRepository extends ServiceEntityRepository
         parent::__construct($registry, Commande::class);
     }
 
-    //    /**
-    //     * @return Commande[] Returns an array of Commande objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return Commande[]
+     */
+    public function findForUser(User $user): array
+    {
+        return $this->createQueryBuilder('c')
+            ->addSelect('m', 'h', 'a')
+            ->join('c.menu', 'm')
+            ->leftJoin('c.statusHistories', 'h')
+            ->leftJoin('c.avis', 'a')
+            ->andWhere('c.user = :user')
+            ->andWhere('c.hiddenFromCustomer = false')
+            ->setParameter('user', $user)
+            ->orderBy('c.date', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Commande[]
+     */
+    public function findForManagement(?string $status = null, ?string $customer = null): array
+    {
+        $queryBuilder = $this->createQueryBuilder('c')
+            ->addSelect('m', 'u', 'h', 'a')
+            ->join('c.menu', 'm')
+            ->join('c.user', 'u')
+            ->leftJoin('c.statusHistories', 'h')
+            ->leftJoin('c.avis', 'a')
+            ->orderBy('c.date', 'DESC')
+        ;
+
+        if ($status) {
+            $queryBuilder
+                ->andWhere('c.status = :status')
+                ->setParameter('status', $status)
+            ;
+        }
+
+        if ($customer) {
+            $queryBuilder
+                ->andWhere('LOWER(u.firstname) LIKE :customer OR LOWER(u.lastname) LIKE :customer OR LOWER(u.email) LIKE :customer')
+                ->setParameter('customer', '%'.mb_strtolower($customer).'%')
+            ;
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     //    public function findOneBySomeField($value): ?Commande
     //    {

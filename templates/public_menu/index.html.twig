@@ -53,7 +53,7 @@
 
                     <div class="menu-filter-actions">
                         <button class="btn btn-primary" type="submit">filtrer</button>
-                        <button class="btn btn-outline-secondary" type="reset">réinitialiser</button>
+                        <button class="btn btn-outline-secondary" type="reset">enlever tous les filtres</button>
                     </div>
                 </form>
             </aside>
@@ -76,6 +76,7 @@
                             <p class="public-menu-meta">
                                 {{ menu.minPersons }} pers. min. · {{ menu.price }} € · stock : {{ menu.stockAvailable }}
                             </p>
+                            <a href="{{ path('app_commande_new', {'id': menu.id}) }}" class="btn btn-primary">commander</a>
                         </div>
                     </article>
                 {% else %}

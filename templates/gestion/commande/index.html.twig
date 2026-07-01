@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des commandes{% endblock %}
+
+{% block body %}
+    <main class="container main management-page">
+        <div class="management-card">
+            <h1>Gestion des commandes</h1>
+
+            <form class="management-filters" method="get" action="{{ path('app_gestion_commande_index') }}">
+                <div>
+                    <label for="status-filter">Statut</label>
+                    <select id="status-filter" name="status" class="form-select">
+                        <option value="">tous les statuts</option>
+                        {% for status in statuses %}
+                            <option value="{{ status }}" {{ status == currentStatus ? 'selected' : '' }}>{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="customer-filter">Client</label>
+                    <input id="customer-filter" class="form-control" type="search" name="customer" value="{{ currentCustomer }}" placeholder="nom, prénom ou email">
+                </div>
+
+                <div class="management-filter-actions">
+                    <button class="btn btn-primary" type="submit">filtrer</button>
+                    <a class="btn btn-outline-secondary" href="{{ path('app_gestion_commande_index') }}">enlever les filtres</a>
+                </div>
+            </form>
+
+            {% if commandes is not empty %}
+                <div class="management-orders">
+                    {% for commande in commandes %}
+                        <section class="management-order-card">
+                            <div class="management-order-header">
+                                <div>
+                                    <h2>commande n° {{ commande.id }}</h2>
+                                    <p>{{ commande.date|date('d/m/Y, H:i') }} · {{ commande.user.firstname }} {{ commande.user.lastname }}</p>
+                                </div>
+                                <span class="management-status">{{ commande.status }}</span>
+                            </div>
+
+                            <div class="management-order-grid">
+                                <div>
+                                    <h3>Menu</h3>
+                                    <p>{{ commande.menu.title }}</p>
+                                    <p>{{ commande.nbPers }} personnes · {{ commande.totalPrice|number_format(2, ',', ' ') }} €</p>
+                                </div>
+
+                                <div>
+                                    <h3>Client</h3>
+                                    <p>{{ commande.user.email }}</p>
+                                    <p>{{ commande.user.phone }}</p>
+                                </div>
+
+                                <div>
+                                    <h3>Livraison</h3>
+                                    <p>
+                                        {% if commande.prestationDate %}
+                                            {{ commande.prestationDate|date('d/m/Y') }} à {{ commande.prestationTime ? commande.prestationTime|date('H:i') : 'heure non renseignée' }}
+                                        {% else %}
+                                            date non renseignée
+                                        {% endif %}
+                                    </p>
+                                    <p>
+                                        {% if commande.deliveryAddress %}
+                                            {{ commande.deliveryAddress }}, {{ commande.deliveryPostalCode }} {{ commande.deliveryCity }}
+                                        {% else %}
+                                            adresse non renseignée
+                                        {% endif %}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3>Suivi</h3>
+                                    {% if commande.statusHistories is not empty %}
+                                        <ol class="management-status-history">
+                                            {% for history in commande.statusHistories %}
+                                                <li>
+                                                    <span>{{ history.status }}</span>
+                                                    <small>{{ history.changedAt|date('d/m/Y, H:i') }}</small>
+                                                </li>
+                                            {% endfor %}
+                                        </ol>
+                                    {% else %}
+                                        <p>{{ commande.status }}</p>
+                                        <p>historique non disponible</p>
+                                    {% endif %}
+                                    {% if commande.managementCancellationReason %}
+                                        <p class="management-cancellation-note">
+                                            Annulation après contact {{ commande.managementCancellationContact }} :
+                                            {{ commande.managementCancellationReason }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <form class="management-status-form" method="post" action="{{ path('app_gestion_commande_status', {'id': commande.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('status' ~ commande.id) }}">
+
+                                <label class="visually-hidden" for="status-{{ commande.id }}">Changer le statut de la commande n° {{ commande.id }}</label>
+                                <select id="status-{{ commande.id }}" name="status" class="form-select">
+                                    {% for status in statuses %}
+                                        <option value="{{ status }}" {{ status == commande.status ? 'selected' : '' }}>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <button class="btn btn-primary" type="submit">mettre à jour</button>
+                            </form>
+
+                            {% if commande.status not in ['annulée', 'terminée'] %}
+                                <form class="management-cancel-form" method="post" action="{{ path('app_gestion_commande_cancel', {'id': commande.id}) }}" onsubmit="return confirm('Confirmer l’annulation côté gestion ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('management_cancel' ~ commande.id) }}">
+
+                                    <select name="contact" class="form-select" required aria-label="Mode de contact client">
+                                        <option value="">contact client</option>
+                                        <option value="GSM">GSM</option>
+                                        <option value="email">email</option>
+                                    </select>
+
+                                    <input class="form-control" type="text" name="reason" required placeholder="motif d’annulation">
+
+                                    <button class="btn btn-danger" type="submit">annuler côté gestion</button>
+                                </form>
+                            {% endif %}
+                        </section>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Aucune commande à gérer pour le moment.</p>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

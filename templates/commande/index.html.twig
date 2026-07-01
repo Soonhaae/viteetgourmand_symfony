@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block body %}
+    <main class="container main order-page">
+        <div class="order-card">
+            <h1>Mes commandes</h1>
+
+            {% if commandes is not empty %}
+                <div class="customer-orders">
+                    {% for commande in commandes %}
+                        {% set deliveryPrice = commande.deliveryPrice is not null ? commande.deliveryPrice : 0 %}
+                        {% set menuPrice = commande.deliveryPrice is not null ? commande.totalPrice - commande.deliveryPrice : commande.totalPrice %}
+                        <details class="customer-order-card {{ commande.status == 'terminée' ? 'is-finished' : '' }}">
+                            <summary class="customer-order-summary">
+                                <span>
+                                    <span class="customer-order-number">commande n° {{ commande.id }}</span>
+                                    <span class="customer-order-date">du {{ commande.date|date('d/m/Y, H:i') }}</span>
+                                </span>
+                                <span class="customer-order-status">{{ commande.status }}</span>
+                                <span class="customer-order-toggle">détails <span aria-hidden="true">▾</span></span>
+                            </summary>
+
+                            <div class="customer-order-details">
+                                <h2>{{ commande.menu.title }}</h2>
+                                <p>{{ commande.nbPers }} personnes · {{ commande.totalPrice|number_format(2, ',', ' ') }} € livraison comprise</p>
+                                <table class="table table-striped align-middle">
+                                    <tbody>
+                                        <tr>
+                                            <th>Conditions du menu</th>
+                                            <td>{{ commande.menu.conditions }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Date de prestation</th>
+                                            <td>
+                                                {% if commande.prestationDate %}
+                                                    {{ commande.prestationDate|date('d/m/Y') }} à {{ commande.prestationTime ? commande.prestationTime|date('H:i') : 'heure non renseignée' }}
+                                                {% else %}
+                                                    non renseignée
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Adresse de livraison</th>
+                                            <td>
+                                                {% if commande.deliveryAddress %}
+                                                    {{ commande.deliveryAddress }}<br>
+                                                    {{ commande.deliveryPostalCode }} {{ commande.deliveryCity }}
+                                                {% else %}
+                                                    non renseignée
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% if commande.deliveryDetails %}
+                                            <tr>
+                                                <th>Précisions</th>
+                                                <td>{{ commande.deliveryDetails }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if commande.deliveryPrice is not null %}
+                                            <tr>
+                                                <th>Prix du menu</th>
+                                                <td>{{ menuPrice|number_format(2, ',', ' ') }} €</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Livraison</th>
+                                                <td>
+                                                    {{ deliveryPrice|number_format(2, ',', ' ') }} €
+                                                    {% if commande.deliveryDistanceKm is not null %}
+                                                        · {{ commande.deliveryDistanceKm }} km depuis Bordeaux
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total commande</th>
+                                                <td>{{ commande.totalPrice|number_format(2, ',', ' ') }} €</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+
+                                <section class="order-status-section">
+                                    <h3>Suivi de commande</h3>
+                                    {% if commande.status == 'annulée' %}
+                                        <p class="order-cancelled-note">Cette commande a été annulée.</p>
+                                        {% if commande.statusHistories is not empty %}
+                                            <ol class="order-status-list">
+                                                {% for history in commande.statusHistories %}
+                                                    <li class="{{ history.status == commande.status ? 'is-current' : '' }}">
+                                                        {{ history.status }} · {{ history.changedAt|date('d/m/Y, H:i') }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ol>
+                                        {% endif %}
+                                    {% else %}
+                                        <ol class="order-status-list">
+                                            {% if commande.statusHistories is not empty %}
+                                                {% for history in commande.statusHistories %}
+                                                    <li class="{{ history.status == commande.status ? 'is-current' : '' }}">
+                                                        {{ history.status }} · {{ history.changedAt|date('d/m/Y, H:i') }}
+                                                    </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li class="is-current">{{ commande.status }} · date non disponible</li>
+                                            {% endif %}
+                                        </ol>
+                                    {% endif %}
+                                </section>
+
+                                {% if commande.status == 'terminée' %}
+                                    <section class="order-review-section">
+                                        <h3>Votre avis</h3>
+                                        {% if commande.avis %}
+                                            <p>Note : {{ commande.avis.rating }}/5</p>
+                                            <p>{{ commande.avis.comment }}</p>
+                                            <p class="order-help">
+                                                {{ commande.avis.validated ? 'Avis validé et visible publiquement.' : 'Avis en attente de validation.' }}
+                                            </p>
+                                        {% elseif reviewForms[commande.id] is defined %}
+                                            {{ form_start(reviewForms[commande.id], {
+                                                'action': path('app_commande_review', {'id': commande.id}),
+                                                'attr': {'class': 'order-review-form'}
+                                            }) }}
+                                                {{ form_row(reviewForms[commande.id].rating) }}
+                                                {{ form_row(reviewForms[commande.id].comment) }}
+                                                <button class="btn btn-primary" type="submit">envoyer mon avis</button>
+                                            {{ form_end(reviewForms[commande.id]) }}
+                                        {% endif %}
+                                    </section>
+                                {% endif %}
+
+                                <div class="customer-order-actions">
+                                    {% if commande.status == 'en attente' %}
+                                        <a class="btn btn-soft" href="{{ path('app_commande_edit', {'id': commande.id}) }}">modifier la commande</a>
+                                        <form method="post" action="{{ path('app_commande_cancel', {'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous annuler cette commande ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ commande.id) }}">
+                                            <button class="btn btn-danger" type="submit">annuler la commande</button>
+                                        </form>
+                                    {% elseif commande.status in ['annulée', 'terminée'] %}
+                                        <form method="post" action="{{ path('app_commande_hide', {'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous masquer cette commande de votre espace client ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('hide' ~ commande.id) }}">
+                                            <button class="btn btn-outline-secondary" type="submit">masquer de mon compte</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </details>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Vous n’avez pas encore passé de commande.</p>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

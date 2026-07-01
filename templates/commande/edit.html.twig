@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la commande{% endblock %}
+
+{% block body %}
+    <main class="container main order-page">
+        <div class="order-card">
+            <h1>Modifier la commande</h1>
+
+            <section class="order-menu-summary">
+                <p class="public-menu-theme">commande n° {{ commande.id }}</p>
+                <h2>{{ commande.menu.title }}</h2>
+                <p>Vous pouvez modifier le nombre de personnes et les informations de livraison tant que la commande est en attente.</p>
+            </section>
+
+            {{ form_start(form, {'attr': {
+                'class': 'order-form js-order-form js-delivery-form',
+                'data-menu-price': commande.menu.price,
+                'data-min-persons': commande.menu.minPersons,
+                'data-discount-threshold': commande.menu.minPersons + 5,
+                'data-discount-rate': '0.10',
+                'data-menu-total': menuTotalPrice,
+                'data-delivery-base-price': '5.00',
+                'data-delivery-km-rate': '0.59'
+            }}) }}
+                {{ form_row(form.nbPers) }}
+
+                <section class="order-delivery-fields">
+                    <h2>Livraison</h2>
+                    <div class="order-form-grid">
+                        {{ form_row(form.prestationDate) }}
+                        {{ form_row(form.prestationTime) }}
+                        {{ form_row(form.deliveryAddress) }}
+                        {{ form_row(form.deliveryPostalCode) }}
+                        {{ form_row(form.deliveryCity) }}
+                        {{ form_row(form.deliveryDistanceKm) }}
+                    </div>
+                    {{ form_row(form.deliveryDetails) }}
+                </section>
+
+                <section class="order-price-details" aria-live="polite">
+                    <h2>Détail du prix</h2>
+                    <table class="order-price-table">
+                        <tbody>
+                            <tr>
+                                <th>Prix du menu pour {{ commande.menu.minPersons }} personnes</th>
+                                <td>{{ commande.menu.price }} €</td>
+                            </tr>
+                            <tr class="js-order-subtotal-row d-none">
+                                <th>Prix avant remise</th>
+                                <td><span class="js-order-subtotal">{{ commande.totalPrice }}</span> €</td>
+                            </tr>
+                            <tr class="js-order-discount-row d-none">
+                                <th>Remise de 10%</th>
+                                <td>-<span class="js-order-discount">0.00</span> €</td>
+                            </tr>
+                            <tr class="order-total">
+                                <th>Total menu hors livraison</th>
+                                <td><span class="js-order-total">{{ menuTotalPrice }}</span> €</td>
+                            </tr>
+                            <tr>
+                                <th>Frais de livraison</th>
+                                <td><span class="js-delivery-price">{{ commande.deliveryPrice ?? '5.00' }}</span> €</td>
+                            </tr>
+                            <tr class="order-total">
+                                <th>Total commande</th>
+                                <td><span class="js-order-final-total">{{ commande.totalPrice }}</span> €</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <div class="menu-form-actions">
+                    <button class="btn btn-primary" type="submit">enregistrer les modifications</button>
+                    <a href="{{ path('app_commande_index') }}" class="btn btn-outline-secondary">retour à mes commandes</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </main>
+{% endblock %}

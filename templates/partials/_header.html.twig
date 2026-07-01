@@ -21,13 +21,13 @@
             {# --- PARTIE AUTH --- #}
 
             {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('app_admin') }}" class="topnav-link">
+                <a href="{{ path('app_admin_user_index') }}" class="topnav-link">
                     admin
                 </a>
             {% endif %}
 
             {% if is_granted('ROLE_EMPLOYEE') %}
-                <a href="{{ path('app_gestion') }}" class="topnav-link">
+                <a href="{{ path('app_gestion_commande_index') }}" class="topnav-link">
                     gestion
                 </a>
             {% endif %}

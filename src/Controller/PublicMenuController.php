@@ -70,6 +70,7 @@ final class PublicMenuController extends AbstractController
         $image = $menu->getImages()->first() ?: null;
 
         return [
+            'orderUrl' => $this->generateUrl('app_commande_new', ['id' => $menu->getId()]),
             'title' => $menu->getTitle(),
             'theme' => $menu->getTheme(),
             'content' => $menu->getContent(),
