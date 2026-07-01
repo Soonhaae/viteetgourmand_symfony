@@ -56,7 +56,7 @@ body {
 .topbar-inner {
   display: flex;
   justify-content: flex-end;
-  padding: 1.5rem 0;
+  padding: 1.5rem 2rem 1.5rem 0;
   background: var(--darker);
 }
 
@@ -83,7 +83,7 @@ body {
   justify-content: space-between;
   background: var(--dark);
   padding: 2rem;
-  min-height: 260px;
+  min-height: 230px;
 }
 
 .hero-title-block {
