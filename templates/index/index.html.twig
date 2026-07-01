@@ -97,19 +97,19 @@
             <h2 class="section-title-center">Retours d’expérience</h2>
 
             <div class="reviews-grid">
-
-                <article class="review-card">
-                    <h3 class="review-title">Noël 2025</h3>
-                    <p class="review-stars">★★★★★</p>
-                    <p class="review-text">“Excellent service.”</p>
-                </article>
-
-                <article class="review-card">
-                    <h3 class="review-title">Entreprise N.</h3>
-                    <p class="review-stars">★★★★★</p>
-                    <p class="review-text">“Très professionnel.”</p>
-                </article>
-
+                {% for review in publishedReviews %}
+                    <article class="review-card">
+                        <h3 class="review-title">{{ review.commande.menu.theme }}</h3>
+                        <p class="review-stars" aria-label="{{ review.rating }}/5">
+                            {% for star in 1..5 %}
+                                {% if star <= review.rating %}&#9733;{% else %}&#9734;{% endif %}
+                            {% endfor %}
+                        </p>
+                        <p class="review-text">“{{ review.publicExcerpt }}”</p>
+                    </article>
+                {% else %}
+                    <p class="reviews-empty">Les premiers avis publiés seront affichés ici.</p>
+                {% endfor %}
             </div>
         </section>
 

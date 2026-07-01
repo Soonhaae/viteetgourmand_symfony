@@ -199,6 +199,11 @@ body {
   border-radius: 12px;
 }
 
+.reviews-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
 /* footer */
 .footer-inner {
   display: grid;

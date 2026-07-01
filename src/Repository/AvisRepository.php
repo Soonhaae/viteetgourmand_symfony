@@ -33,4 +33,23 @@ class AvisRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * @return Avis[]
+     */
+    public function findPublishedForHomepage(int $limit = 4): array
+    {
+        return $this->createQueryBuilder('a')
+            ->addSelect('c', 'm')
+            ->join('a.commande', 'c')
+            ->join('c.menu', 'm')
+            ->andWhere('a.validated = true')
+            ->andWhere('a.refused = false')
+            ->andWhere('a.published = true')
+            ->orderBy('a.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
