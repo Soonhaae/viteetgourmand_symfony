@@ -23,9 +23,10 @@ class CommandeRepository extends ServiceEntityRepository
     public function findForUser(User $user): array
     {
         return $this->createQueryBuilder('c')
-            ->addSelect('m', 'h')
+            ->addSelect('m', 'h', 'a')
             ->join('c.menu', 'm')
             ->leftJoin('c.statusHistories', 'h')
+            ->leftJoin('c.avis', 'a')
             ->andWhere('c.user = :user')
             ->andWhere('c.hiddenFromCustomer = false')
             ->setParameter('user', $user)
@@ -41,10 +42,11 @@ class CommandeRepository extends ServiceEntityRepository
     public function findForManagement(?string $status = null, ?string $customer = null): array
     {
         $queryBuilder = $this->createQueryBuilder('c')
-            ->addSelect('m', 'u', 'h')
+            ->addSelect('m', 'u', 'h', 'a')
             ->join('c.menu', 'm')
             ->join('c.user', 'u')
             ->leftJoin('c.statusHistories', 'h')
+            ->leftJoin('c.avis', 'a')
             ->orderBy('c.date', 'DESC')
         ;
 

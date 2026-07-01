@@ -79,6 +79,9 @@ class Commande
     #[ORM\OrderBy(['changedAt' => 'ASC'])]
     private Collection $statusHistories;
 
+    #[ORM\OneToOne(mappedBy: 'commande', cascade: ['persist', 'remove'])]
+    private ?Avis $avis = null;
+
     public function __construct()
     {
         $this->statusHistories = new ArrayCollection();
@@ -330,6 +333,22 @@ class Commande
                 $statusHistory->setCommande(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvis(): ?Avis
+    {
+        return $this->avis;
+    }
+
+    public function setAvis(Avis $avis): static
+    {
+        if ($avis->getCommande() !== $this) {
+            $avis->setCommande($this);
+        }
+
+        $this->avis = $avis;
 
         return $this;
     }

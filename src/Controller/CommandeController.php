@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Commande;
 use App\Entity\CommandeStatusHistory;
 use App\Entity\Menu;
 use App\Entity\User;
+use App\Form\AvisType;
 use App\Form\CommandeDeliveryType;
 use App\Form\CommandeEditType;
 use App\Form\CommandeType;
@@ -34,8 +36,18 @@ final class CommandeController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        $commandes = $commandeRepository->findForUser($user);
+        $reviewForms = [];
+
+        foreach ($commandes as $commande) {
+            if ($commande->getStatus() === self::STATUS_FINISHED && $commande->getAvis() === null) {
+                $reviewForms[$commande->getId()] = $this->createForm(AvisType::class)->createView();
+            }
+        }
+
         return $this->render('commande/index.html.twig', [
-            'commandes' => $commandeRepository->findForUser($user),
+            'commandes' => $commandes,
+            'reviewForms' => $reviewForms,
         ]);
     }
 
@@ -229,6 +241,36 @@ final class CommandeController extends AbstractController
         ) {
             $commande->setHiddenFromCustomer(true);
             $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/avis', name: 'app_commande_review', methods: ['POST'])]
+    public function review(Request $request, Commande $commande, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessToOtherCustomerOrder($commande);
+
+        if ($commande->getStatus() !== self::STATUS_FINISHED || $commande->getAvis() !== null) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $avis = (new Avis())
+            ->setCommande($commande)
+            ->setUser($commande->getUser())
+            ->setCreatedAt(new \DateTimeImmutable())
+            ->setValidated(false)
+        ;
+
+        $form = $this->createForm(AvisType::class, $avis);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($avis);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre avis a bien été enregistré. Il sera visible après validation.');
         }
 
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);

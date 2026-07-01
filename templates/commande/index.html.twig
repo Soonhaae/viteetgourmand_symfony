@@ -108,6 +108,28 @@
                                     {% endif %}
                                 </section>
 
+                                {% if commande.status == 'terminée' %}
+                                    <section class="order-review-section">
+                                        <h3>Votre avis</h3>
+                                        {% if commande.avis %}
+                                            <p>Note : {{ commande.avis.rating }}/5</p>
+                                            <p>{{ commande.avis.comment }}</p>
+                                            <p class="order-help">
+                                                {{ commande.avis.validated ? 'Avis validé et visible publiquement.' : 'Avis en attente de validation.' }}
+                                            </p>
+                                        {% elseif reviewForms[commande.id] is defined %}
+                                            {{ form_start(reviewForms[commande.id], {
+                                                'action': path('app_commande_review', {'id': commande.id}),
+                                                'attr': {'class': 'order-review-form'}
+                                            }) }}
+                                                {{ form_row(reviewForms[commande.id].rating) }}
+                                                {{ form_row(reviewForms[commande.id].comment) }}
+                                                <button class="btn btn-primary" type="submit">envoyer mon avis</button>
+                                            {{ form_end(reviewForms[commande.id]) }}
+                                        {% endif %}
+                                    </section>
+                                {% endif %}
+
                                 <div class="customer-order-actions">
                                     {% if commande.status == 'en attente' %}
                                         <a class="btn btn-soft" href="{{ path('app_commande_edit', {'id': commande.id}) }}">modifier la commande</a>
