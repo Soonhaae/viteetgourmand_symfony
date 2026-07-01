@@ -7,6 +7,28 @@
         <div class="management-card">
             <h1>Gestion des commandes</h1>
 
+            <form class="management-filters" method="get" action="{{ path('app_gestion_commande_index') }}">
+                <div>
+                    <label for="status-filter">Statut</label>
+                    <select id="status-filter" name="status" class="form-select">
+                        <option value="">tous les statuts</option>
+                        {% for status in statuses %}
+                            <option value="{{ status }}" {{ status == currentStatus ? 'selected' : '' }}>{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="customer-filter">Client</label>
+                    <input id="customer-filter" class="form-control" type="search" name="customer" value="{{ currentCustomer }}" placeholder="nom, prénom ou email">
+                </div>
+
+                <div class="management-filter-actions">
+                    <button class="btn btn-primary" type="submit">filtrer</button>
+                    <a class="btn btn-outline-secondary" href="{{ path('app_gestion_commande_index') }}">enlever les filtres</a>
+                </div>
+            </form>
+
             {% if commandes is not empty %}
                 <div class="management-orders">
                     {% for commande in commandes %}

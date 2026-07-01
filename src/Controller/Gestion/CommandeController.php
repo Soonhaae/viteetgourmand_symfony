@@ -28,11 +28,20 @@ final class CommandeController extends AbstractController
     ];
 
     #[Route(name: 'app_gestion_commande_index', methods: ['GET'])]
-    public function index(CommandeRepository $commandeRepository): Response
+    public function index(Request $request, CommandeRepository $commandeRepository): Response
     {
+        $status = $request->query->getString('status') ?: null;
+        $customer = trim($request->query->getString('customer')) ?: null;
+
+        if ($status && !in_array($status, self::STATUSES, true)) {
+            $status = null;
+        }
+
         return $this->render('gestion/commande/index.html.twig', [
-            'commandes' => $commandeRepository->findForManagement(),
+            'commandes' => $commandeRepository->findForManagement($status, $customer),
             'statuses' => self::STATUSES,
+            'currentStatus' => $status,
+            'currentCustomer' => $customer,
         ]);
     }
 

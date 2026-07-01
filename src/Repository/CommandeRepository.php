@@ -38,14 +38,31 @@ class CommandeRepository extends ServiceEntityRepository
     /**
      * @return Commande[]
      */
-    public function findForManagement(): array
+    public function findForManagement(?string $status = null, ?string $customer = null): array
     {
-        return $this->createQueryBuilder('c')
+        $queryBuilder = $this->createQueryBuilder('c')
             ->addSelect('m', 'u', 'h')
             ->join('c.menu', 'm')
             ->join('c.user', 'u')
             ->leftJoin('c.statusHistories', 'h')
             ->orderBy('c.date', 'DESC')
+        ;
+
+        if ($status) {
+            $queryBuilder
+                ->andWhere('c.status = :status')
+                ->setParameter('status', $status)
+            ;
+        }
+
+        if ($customer) {
+            $queryBuilder
+                ->andWhere('LOWER(u.firstname) LIKE :customer OR LOWER(u.lastname) LIKE :customer OR LOWER(u.email) LIKE :customer')
+                ->setParameter('customer', '%'.mb_strtolower($customer).'%')
+            ;
+        }
+
+        return $queryBuilder
             ->getQuery()
             ->getResult()
         ;

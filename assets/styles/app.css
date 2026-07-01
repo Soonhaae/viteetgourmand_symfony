@@ -865,6 +865,28 @@ body {
   gap: 1rem;
 }
 
+.management-filters {
+  display: grid;
+  grid-template-columns: minmax(10rem, 16rem) minmax(12rem, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--secondary);
+  border-radius: 8px;
+}
+
+.management-filters label {
+  color: var(--darker);
+  font-weight: 700;
+}
+
+.management-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .management-order-card {
   padding: 1.25rem;
   background: var(--secondary);
@@ -1064,7 +1086,8 @@ body {
   }
 
   .management-order-grid,
-  .management-status-form {
+  .management-status-form,
+  .management-filters {
     grid-template-columns: 1fr;
   }
 }
