@@ -50,6 +50,12 @@ class Commande
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $deliveryDetails = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $deliveryDistanceKm = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $deliveryPrice = null;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Menu $menu = null;
@@ -203,6 +209,30 @@ class Commande
     public function setDeliveryDetails(?string $deliveryDetails): static
     {
         $this->deliveryDetails = $deliveryDetails;
+
+        return $this;
+    }
+
+    public function getDeliveryDistanceKm(): ?int
+    {
+        return $this->deliveryDistanceKm;
+    }
+
+    public function setDeliveryDistanceKm(?int $deliveryDistanceKm): static
+    {
+        $this->deliveryDistanceKm = $deliveryDistanceKm;
+
+        return $this;
+    }
+
+    public function getDeliveryPrice(): ?string
+    {
+        return $this->deliveryPrice;
+    }
+
+    public function setDeliveryPrice(?string $deliveryPrice): static
+    {
+        $this->deliveryPrice = $deliveryPrice;
 
         return $this;
     }

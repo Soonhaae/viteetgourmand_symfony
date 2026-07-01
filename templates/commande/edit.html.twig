@@ -14,11 +14,14 @@
             </section>
 
             {{ form_start(form, {'attr': {
-                'class': 'order-form js-order-form',
+                'class': 'order-form js-order-form js-delivery-form',
                 'data-menu-price': commande.menu.price,
                 'data-min-persons': commande.menu.minPersons,
                 'data-discount-threshold': commande.menu.minPersons + 5,
-                'data-discount-rate': '0.10'
+                'data-discount-rate': '0.10',
+                'data-menu-total': menuTotalPrice,
+                'data-delivery-base-price': '5.00',
+                'data-delivery-km-rate': '0.59'
             }}) }}
                 {{ form_row(form.nbPers) }}
 
@@ -30,6 +33,7 @@
                         {{ form_row(form.deliveryAddress) }}
                         {{ form_row(form.deliveryPostalCode) }}
                         {{ form_row(form.deliveryCity) }}
+                        {{ form_row(form.deliveryDistanceKm) }}
                     </div>
                     {{ form_row(form.deliveryDetails) }}
                 </section>
@@ -51,8 +55,16 @@
                                 <td>-<span class="js-order-discount">0.00</span> €</td>
                             </tr>
                             <tr class="order-total">
-                                <th>Total estimé hors livraison</th>
-                                <td><span class="js-order-total">{{ commande.totalPrice }}</span> €</td>
+                                <th>Total menu hors livraison</th>
+                                <td><span class="js-order-total">{{ menuTotalPrice }}</span> €</td>
+                            </tr>
+                            <tr>
+                                <th>Frais de livraison</th>
+                                <td><span class="js-delivery-price">{{ commande.deliveryPrice ?? '5.00' }}</span> €</td>
+                            </tr>
+                            <tr class="order-total">
+                                <th>Total commande</th>
+                                <td><span class="js-order-final-total">{{ commande.totalPrice }}</span> €</td>
                             </tr>
                         </tbody>
                     </table>

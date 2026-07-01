@@ -9,7 +9,7 @@
 
             <section class="order-menu-summary">
                 <h2>{{ menu.title }}</h2>
-                <p>{{ commande.nbPers }} personnes · {{ commande.totalPrice }} € hors livraison</p>
+                <p>{{ commande.nbPers }} personnes · {{ menuTotalPrice }} € hors livraison</p>
                 <p class="order-conditions">Conditions acceptées : {{ commande.conditionsAccepted ? 'oui' : 'non' }}</p>
             </section>
 
@@ -36,7 +36,12 @@
                 <p class="order-help">Ces informations viennent de votre compte.</p>
             </section>
 
-            {{ form_start(form, {'attr': {'class': 'order-form'}}) }}
+            {{ form_start(form, {'attr': {
+                'class': 'order-form js-delivery-form',
+                'data-menu-total': menuTotalPrice,
+                'data-delivery-base-price': '5.00',
+                'data-delivery-km-rate': '0.59'
+            }}) }}
                 <section class="order-delivery-fields">
                     <h2>Prestation et livraison</h2>
                     <div class="order-form-grid">
@@ -45,6 +50,7 @@
                         {{ form_row(form.deliveryAddress) }}
                         {{ form_row(form.deliveryPostalCode) }}
                         {{ form_row(form.deliveryCity) }}
+                        {{ form_row(form.deliveryDistanceKm) }}
                     </div>
                     {{ form_row(form.deliveryDetails) }}
                 </section>
@@ -55,11 +61,15 @@
                         <tbody>
                             <tr>
                                 <th>Total menu hors livraison</th>
-                                <td>{{ commande.totalPrice }} €</td>
+                                <td><span class="js-delivery-menu-total">{{ menuTotalPrice }}</span> €</td>
+                            </tr>
+                            <tr>
+                                <th>Frais de livraison</th>
+                                <td><span class="js-delivery-price">5.00</span> €</td>
                             </tr>
                             <tr class="order-total">
-                                <th>Livraison</th>
-                                <td>à calculer</td>
+                                <th>Total commande</th>
+                                <td><span class="js-order-final-total">{{ menuTotalPrice }}</span> €</td>
                             </tr>
                         </tbody>
                     </table>

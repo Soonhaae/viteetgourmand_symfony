@@ -11,6 +11,7 @@ use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -53,7 +54,7 @@ final class CommandeController extends AbstractController
             ->setDate(new \DateTimeImmutable())
             ->setStatus(self::STATUS_PENDING)
             ->setNbPers($menu->getMinPersons())
-            ->setTotalPrice($menu->getPrice())
+            ->setTotalPrice($this->calculateMenuTotalPrice($menu, $menu->getMinPersons()))
             ->setConditionsAccepted(false)
         ;
 
@@ -113,7 +114,7 @@ final class CommandeController extends AbstractController
             ->setDate(new \DateTimeImmutable())
             ->setStatus(self::STATUS_PENDING)
             ->setNbPers($nbPers)
-            ->setTotalPrice($this->calculateTotalPrice($menu, $nbPers))
+            ->setTotalPrice($this->calculateMenuTotalPrice($menu, $nbPers))
             ->setConditionsAccepted((bool) ($draft['conditionsAccepted'] ?? false))
         ;
 
@@ -121,16 +122,27 @@ final class CommandeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $commande->setTotalPrice($this->calculateTotalPrice($menu, $commande->getNbPers()));
-            $menu->setStockAvailable($menu->getStockAvailable() - $commande->getNbPers());
+            if ($this->needsDeliveryDistance($commande)) {
+                $form->get('deliveryDistanceKm')->addError(new FormError('Veuillez indiquer une distance supérieure à 0 km depuis Bordeaux.'));
+            } else {
+                $menuTotalPrice = $this->calculateMenuTotalPrice($menu, $commande->getNbPers());
+                $deliveryPrice = $this->calculateDeliveryPrice($commande);
 
-            $entityManager->persist($commande);
-            $entityManager->flush();
+                $commande
+                    ->setDeliveryPrice($deliveryPrice)
+                    ->setTotalPrice($this->calculateOrderTotalPrice($menuTotalPrice, $deliveryPrice))
+                ;
 
-            $request->getSession()->remove($sessionKey);
-            $this->addFlash('success', 'Votre commande a bien été enregistrée.');
+                $menu->setStockAvailable($menu->getStockAvailable() - $commande->getNbPers());
 
-            return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+                $entityManager->persist($commande);
+                $entityManager->flush();
+
+                $request->getSession()->remove($sessionKey);
+                $this->addFlash('success', 'Votre commande a bien été enregistrée.');
+
+                return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->render('commande/delivery.html.twig', [
@@ -138,6 +150,7 @@ final class CommandeController extends AbstractController
             'commande' => $commande,
             'customer' => $user,
             'form' => $form,
+            'menuTotalPrice' => $this->calculateMenuTotalPrice($menu, $commande->getNbPers()),
         ]);
     }
 
@@ -159,18 +172,30 @@ final class CommandeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $stockDifference = $commande->getNbPers() - $previousNbPers;
-            $commande->setTotalPrice($this->calculateTotalPrice($commande->getMenu(), $commande->getNbPers()));
-            $commande->getMenu()->setStockAvailable($commande->getMenu()->getStockAvailable() - $stockDifference);
-            $entityManager->flush();
+            if ($this->needsDeliveryDistance($commande)) {
+                $form->get('deliveryDistanceKm')->addError(new FormError('Veuillez indiquer une distance supérieure à 0 km depuis Bordeaux.'));
+            } else {
+                $menuTotalPrice = $this->calculateMenuTotalPrice($commande->getMenu(), $commande->getNbPers());
+                $deliveryPrice = $this->calculateDeliveryPrice($commande);
 
-            $this->addFlash('success', 'Votre commande a bien été modifiée.');
+                $commande
+                    ->setDeliveryPrice($deliveryPrice)
+                    ->setTotalPrice($this->calculateOrderTotalPrice($menuTotalPrice, $deliveryPrice))
+                ;
 
-            return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+                $commande->getMenu()->setStockAvailable($commande->getMenu()->getStockAvailable() - $stockDifference);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Votre commande a bien été modifiée.');
+
+                return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         return $this->render('commande/edit.html.twig', [
             'commande' => $commande,
             'form' => $form,
+            'menuTotalPrice' => $this->calculateMenuTotalPrice($commande->getMenu(), $commande->getNbPers()),
         ]);
     }
 
@@ -207,7 +232,7 @@ final class CommandeController extends AbstractController
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    private function calculateTotalPrice(Menu $menu, int $nbPers): string
+    private function calculateMenuTotalPrice(Menu $menu, int $nbPers): string
     {
         $unitPrice = (float) $menu->getPrice() / $menu->getMinPersons();
         $totalPrice = $unitPrice * $nbPers;
@@ -217,6 +242,36 @@ final class CommandeController extends AbstractController
         }
 
         return number_format($totalPrice, 2, '.', '');
+    }
+
+    private function calculateDeliveryPrice(Commande $commande): string
+    {
+        $deliveryPrice = 5.0;
+
+        if (!$this->isDeliveryInBordeaux($commande)) {
+            $deliveryPrice += ((int) $commande->getDeliveryDistanceKm()) * 0.59;
+        }
+
+        if ($this->isDeliveryInBordeaux($commande)) {
+            $commande->setDeliveryDistanceKm(0);
+        }
+
+        return number_format($deliveryPrice, 2, '.', '');
+    }
+
+    private function calculateOrderTotalPrice(string $menuTotalPrice, string $deliveryPrice): string
+    {
+        return number_format((float) $menuTotalPrice + (float) $deliveryPrice, 2, '.', '');
+    }
+
+    private function needsDeliveryDistance(Commande $commande): bool
+    {
+        return !$this->isDeliveryInBordeaux($commande) && ($commande->getDeliveryDistanceKm() === null || $commande->getDeliveryDistanceKm() <= 0);
+    }
+
+    private function isDeliveryInBordeaux(Commande $commande): bool
+    {
+        return strtolower(trim((string) $commande->getDeliveryCity())) === 'bordeaux';
     }
 
     private function getOrderDraftSessionKey(Menu $menu): string

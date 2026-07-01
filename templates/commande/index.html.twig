@@ -10,6 +10,8 @@
             {% if commandes is not empty %}
                 <div class="customer-orders">
                     {% for commande in commandes %}
+                        {% set deliveryPrice = commande.deliveryPrice is not null ? commande.deliveryPrice : 0 %}
+                        {% set menuPrice = commande.deliveryPrice is not null ? commande.totalPrice - commande.deliveryPrice : commande.totalPrice %}
                         <details class="customer-order-card {{ commande.status == 'terminée' ? 'is-finished' : '' }}">
                             <summary class="customer-order-summary">
                                 <span>
@@ -22,7 +24,7 @@
 
                             <div class="customer-order-details">
                                 <h2>{{ commande.menu.title }}</h2>
-                                <p>{{ commande.nbPers }} personnes · {{ commande.totalPrice }} € hors livraison</p>
+                                <p>{{ commande.nbPers }} personnes · {{ commande.totalPrice|number_format(2, ',', ' ') }} € livraison comprise</p>
                                 <table class="table table-striped align-middle">
                                     <tbody>
                                         <tr>
@@ -54,6 +56,25 @@
                                             <tr>
                                                 <th>Précisions</th>
                                                 <td>{{ commande.deliveryDetails }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if commande.deliveryPrice is not null %}
+                                            <tr>
+                                                <th>Prix du menu</th>
+                                                <td>{{ menuPrice|number_format(2, ',', ' ') }} €</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Livraison</th>
+                                                <td>
+                                                    {{ deliveryPrice|number_format(2, ',', ' ') }} €
+                                                    {% if commande.deliveryDistanceKm is not null %}
+                                                        · {{ commande.deliveryDistanceKm }} km depuis Bordeaux
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Total commande</th>
+                                                <td>{{ commande.totalPrice|number_format(2, ',', ' ') }} €</td>
                                             </tr>
                                         {% endif %}
                                     </tbody>

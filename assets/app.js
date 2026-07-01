@@ -2,6 +2,7 @@ import './stimulus_bootstrap.js';
 import './menu_filters.js';
 import './password_toggle.js';
 import './order_total.js';
+import './order_delivery_fee.js';
 /*
  * Welcome to your app's main JavaScript file!
  *
