@@ -3,118 +3,120 @@
 {% block title %}Accueil - Vite&Gourmand{% endblock %}
 
 {% block body %}
+    <main class="page-bg main">
+        <div class="container page-inner">
+            <div class="separation darker"></div>
 
-<main class="page-bg main">
+            <section class="section-block section-tight">
+                <h2 class="section-title-center">Une entreprise aux petits oignons</h2>
 
-    <div class="container page-inner">
-
-        <div class="separation darker"></div>
-
-        <!-- BLOC 1 -->
-        <section class="section-block section-tight">
-            <h2 class="section-title-center">Une entreprise aux petits oignons</h2>
-
-            <div class="section-block-top">
-
-                <div class="section-text-card">
-                    <p>
-                        <span class="marque">Vite&Gourmand</span> régale Bordeaux et ses alentours avec une cuisine généreuse,
-                        authentique et pleine de saveurs.
-                    </p>
-                </div>
-
-                <div class="photo-wrapper">
-                    <div class="photo-back"></div>
-                    <div class="photo-front">
-                        <img src="{{ asset('img/ui/duo.png') }}" alt="Équipe Vite&Gourmand">
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="section-block-bottom">
-
-                <div class="photo-wrapper">
-                    <div class="photo-back"></div>
-                    <div class="photo-front">
-                        <img src="{{ asset('img/ui/table_mariage.jpg') }}" alt="Table mariage">
-                    </div>
-                </div>
-
-                <div class="section-text-card">
-                    <p>
-                        Traiteur de proximité, <span class="marque">Vite&Gourmand</span> accompagne tous vos événements.
-                    </p>
-                </div>
-
-            </div>
-        </section>
-
-        <div class="separation dark"></div>
-
-        <!-- BLOC 2 -->
-        <section class="section-block section-alt">
-            <h2 class="section-title-center">Nos équipes à votre service</h2>
-
-            <div class="section-block-top">
-
-                <div class="photo-wrapper">
-                    <div class="photo-back"></div>
-                    <div class="photo-front">
-                        <img src="{{ asset('img/ui/equipe_cuisine.png') }}" alt="Équipe cuisine">
-                    </div>
-                </div>
-
-                <div class="section-text-card">
-                    <p>
-                        Chez <span class="marque">Vite&Gourmand</span>, le professionnalisme repose sur trois équipes.
-                    </p>
-                </div>
-
-            </div>
-
-            <div class="section-block-bottom">
-
-                <div class="section-text-card">
-                    <p><strong>L’équipe logistique</strong> organise tout.</p>
-                    <p><strong>L’équipe livraison</strong> assure la ponctualité.</p>
-                </div>
-
-                <div class="photo-wrapper">
-                    <div class="photo-back"></div>
-                    <div class="photo-front">
-                        <img src="{{ asset('img/ui/les_deux_equipes.png') }}" alt="Équipes">
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <div class="separation shadow"></div>
-
-        <!-- BLOC 3 -->
-        <section class="section-block section-tight">
-            <h2 class="section-title-center">Retours d’expérience</h2>
-
-            <div class="reviews-grid">
-                {% for review in publishedReviews %}
-                    <article class="review-card">
-                        <h3 class="review-title">{{ review.commande.menu.theme }}</h3>
-                        <p class="review-stars" aria-label="{{ review.rating }}/5">
-                            {% for star in 1..5 %}
-                                {% if star <= review.rating %}&#9733;{% else %}&#9734;{% endif %}
-                            {% endfor %}
+                <div class="section-block-top">
+                    <div class="section-text-card">
+                        <p>
+                            <span class="marque">Vite&Gourmand</span> régale Bordeaux et ses alentours avec une cuisine généreuse,
+                            authentique et pleine de saveurs. Fondée il y a 25 ans par Julie et José, deux passionnés
+                            de gastronomie et du travail bien fait, l’entreprise s’est construite autour d’une valeur
+                            essentielle : proposer des repas de qualité, préparés avec soin, adaptés à chaque occasion.
                         </p>
-                        <p class="review-text">“{{ review.publicExcerpt }}”</p>
-                    </article>
-                {% else %}
-                    <p class="reviews-empty">Les premiers avis publiés seront affichés ici.</p>
-                {% endfor %}
-            </div>
-        </section>
+                    </div>
 
-    </div>
+                    <div class="photo-wrapper">
+                        <div class="photo-back"></div>
+                        <div class="photo-front">
+                            <img class="photo-focus-duo" src="{{ asset('img/ui/duo.png') }}" alt="Équipe Vite&Gourmand">
+                        </div>
+                    </div>
+                </div>
 
-</main>
+                <div class="section-block-bottom">
+                    <div class="photo-wrapper">
+                        <div class="photo-back"></div>
+                        <div class="photo-front">
+                            <img src="{{ asset('img/ui/table_mariage.jpg') }}" alt="Exemple table mariage Vite&Gourmand">
+                        </div>
+                    </div>
 
+                    <div class="section-text-card">
+                        <p>
+                            Traiteur de proximité, <span class="marque">Vite&Gourmand</span> accompagne tous vos événements,
+                            des repas du quotidien aux grandes célébrations : anniversaires, mariages, fêtes de fin d’année,
+                            Noël, événements professionnels et bien plus encore. Chaque prestation est pensée pour offrir
+                            un menu sur mesure, avec une attention particulière portée à la présentation, au goût et à la
+                            satisfaction des invités.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="separation dark"></div>
+
+            <section class="section-block section-alt">
+                <h2 class="section-title-center">Nos équipes à votre service</h2>
+
+                <div class="section-block-top">
+                    <div class="photo-wrapper">
+                        <div class="photo-back"></div>
+                        <div class="photo-front">
+                            <img src="{{ asset('img/ui/equipe_cuisine.png') }}" alt="Équipe cuisine Vite&Gourmand">
+                        </div>
+                    </div>
+
+                    <div class="section-text-card">
+                        <p>
+                            Chez <span class="marque">Vite&Gourmand</span>, le professionnalisme repose sur trois équipes complémentaires :
+                            les équipes cuisine, logistique et livraison. Grâce à cette organisation structurée, chaque
+                            événement est assuré avec sérieux et efficacité.
+                        </p>
+                        <p>
+                            <strong>L’équipe cuisine</strong> prépare chaque plat avec exigence, en sélectionnant des produits de
+                            qualité et en veillant autant au goût qu’à la présentation.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="section-block-bottom">
+                    <div class="section-text-card">
+                        <p>
+                            <strong>L’équipe logistique</strong> planifie chaque événement avec précision : gestion des commandes,
+                            organisation du matériel, coordination des délais et anticipation des besoins spécifiques.
+                        </p>
+                        <p>
+                            <strong>L’équipe de livraison</strong> assure un transport rapide et sécurisé : ponctualité, sérieux et
+                            respect des conditions de conservation permettent aux clients de recevoir leurs commandes prêtes à
+                            être dégustées.
+                        </p>
+                    </div>
+
+                    <div class="photo-wrapper">
+                        <div class="photo-back"></div>
+                        <div class="photo-front">
+                            <img class="photo-full-frame" src="{{ asset('img/ui/les_deux_equipes.png') }}" alt="Équipe logistique et livraison de Vite&Gourmand">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="separation shadow"></div>
+
+            <section class="section-block section-tight">
+                <h2 class="section-title-center">Retours d’expérience</h2>
+
+                <div class="reviews-grid">
+                    {% for review in publishedReviews %}
+                        <article class="review-card">
+                            <h3 class="review-title">{{ review.commande.menu.theme }}</h3>
+                            <p class="review-stars" aria-label="{{ review.rating }}/5">
+                                {% for star in 1..5 %}
+                                    {% if star <= review.rating %}&#9733;{% else %}&#9734;{% endif %}
+                                {% endfor %}
+                            </p>
+                            <p class="review-text">“{{ review.publicExcerpt }}”</p>
+                        </article>
+                    {% else %}
+                        <p class="reviews-empty">Les premiers avis publiés seront affichés ici.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </main>
 {% endblock %}

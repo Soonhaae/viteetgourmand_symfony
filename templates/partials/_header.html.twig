@@ -34,16 +34,19 @@
 
             {% if is_granted('ROLE_USER') %}
                 <a href="{{ path('app_account') }}" class="topnav-link">
+                    <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
                     mon compte
                 </a>
             {% endif %}
 
             {% if app.user %}
                 <a href="{{ path('app_logout') }}" class="topnav-link">
+                    <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
                     déconnexion
                 </a>
             {% else %}
                 <a href="{{ path('app_login') }}" class="topnav-link">
+                    <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
                     connexion
                 </a>
             {% endif %}
