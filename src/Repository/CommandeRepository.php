@@ -34,6 +34,21 @@ class CommandeRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return Commande[]
+     */
+    public function findForManagement(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->addSelect('m', 'u')
+            ->join('c.menu', 'm')
+            ->join('c.user', 'u')
+            ->orderBy('c.date', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    public function findOneBySomeField($value): ?Commande
     //    {
     //        return $this->createQueryBuilder('c')

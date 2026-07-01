@@ -86,7 +86,7 @@
                                         <p class="order-cancelled-note">Cette commande a été annulée.</p>
                                     {% else %}
                                         <ol class="order-status-list">
-                                            {% set steps = ['en attente', 'acceptée', 'en préparation', 'en cours de livraison', 'livrée', 'terminée'] %}
+                                            {% set steps = ['en attente', 'acceptée', 'en préparation', 'en cours de livraison', 'livrée', 'en attente du retour de matériel', 'terminée'] %}
                                             {% for step in steps %}
                                                 <li class="{{ step == commande.status ? 'is-current' : '' }}">{{ step }}</li>
                                             {% endfor %}

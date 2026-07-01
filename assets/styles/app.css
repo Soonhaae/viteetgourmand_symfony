@@ -841,6 +841,81 @@ body {
   margin: 0;
 }
 
+/* management */
+.management-page {
+  padding: 5rem 0 7rem;
+}
+
+.management-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--primary);
+  border: 1px solid var(--darker);
+}
+
+.management-card h1 {
+  margin-bottom: 2rem;
+  text-align: center;
+  font-style: normal;
+}
+
+.management-orders {
+  display: grid;
+  gap: 1rem;
+}
+
+.management-order-card {
+  padding: 1.25rem;
+  background: var(--secondary);
+  border-radius: 8px;
+}
+
+.management-order-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.management-order-header h2,
+.management-order-grid h3 {
+  font-style: normal;
+}
+
+.management-order-header h2 {
+  color: var(--darker);
+  font-size: 1.25rem;
+}
+
+.management-status {
+  padding: 0.35rem 0.75rem;
+  background: #e0cb8f;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.management-order-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.management-status-form {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) minmax(12rem, 18rem) auto;
+  gap: 0.75rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.management-status-form label {
+  color: var(--darker);
+  font-weight: 700;
+}
+
 /* login */
 .login-page {
   padding: 5rem 0 7rem;
@@ -967,6 +1042,11 @@ body {
   }
 
   .order-customer-summary dl {
+    grid-template-columns: 1fr;
+  }
+
+  .management-order-grid,
+  .management-status-form {
     grid-template-columns: 1fr;
   }
 }

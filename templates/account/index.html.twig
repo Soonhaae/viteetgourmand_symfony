@@ -12,6 +12,7 @@
                 <a class="btn btn-primary" href="{{ path('app_commande_index') }}">mes commandes</a>
 
                 {% if is_granted('ROLE_EMPLOYEE') %}
+                    <a class="btn btn-outline-secondary" href="{{ path('app_gestion_commande_index') }}">gestion des commandes</a>
                     <a class="btn btn-outline-secondary" href="{{ path('app_menu_index') }}">gestion des menus</a>
                 {% endif %}
 
