@@ -4,17 +4,17 @@
         <nav class="topnav" aria-label="Navigation principale">
 
             <a href="{{ path('app_index') }}" class="topnav-link">
-                <img src="{{ asset('img/icons/homepage.svg') }}" class="icon-contact">
+                <img src="{{ asset('img/icons/homepage.svg') }}" alt="accueil" aria-hidden="true" class="icon-contact">
                 accueil
             </a>
 
             <a href="{{ path('app_public_menu_index') }}" class="topnav-link">
-                <img src="{{ asset('img/icons/couverts.svg') }}" class="icon-contact">
+                <img src="{{ asset('img/icons/couverts.svg') }}" alt="menus" aria-hidden="true" class="icon-contact">
                 menus
             </a>
 
             <a href="{{ path('app_contact') }}" class="topnav-link">
-                <img src="{{ asset('img/icons/envelope.svg') }}" class="icon-contact">
+                <img src="{{ asset('img/icons/envelope.svg') }}" alt="contact" aria-hidden="true" class="icon-contact">
                 contact
             </a>
 
@@ -22,14 +22,14 @@
 
             {% if is_granted('ROLE_USER') %}
                 <a href="{{ path('app_account') }}" class="topnav-link">
-                    <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
+                    <img src="{{ asset('img/icons/account.svg') }}" alt="compte" aria-hidden="true" class="icon-contact">
                     mon compte
                 </a>
             {% endif %}
 
             {% if app.user %}
                 <a href="{{ path('app_logout') }}" class="topnav-link">
-                    <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
+                    <img src="{{ asset('img/icons/account.svg') }}" alt="deconnexion" aria-hidden="true" class="icon-contact">
                     déconnexion
                 </a>
             {% else %}
@@ -38,7 +38,7 @@
                 inscription
               </a>
                 <a href="{{ path('app_login') }}" class="topnav-link">
-                    <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
+                    <img src="{{ asset('img/icons/account.svg') }}" alt="connexion" aria-hidden="true" class="icon-contact">
                     connexion
                 </a>
             {% endif %}

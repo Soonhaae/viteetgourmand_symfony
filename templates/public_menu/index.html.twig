@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Nos menus{% endblock %}
+{% block meta_description %}Découvrez les menus traiteur Vite&Gourmand, filtrez par thème, régime, prix, stock disponible et commandez en ligne autour de Bordeaux.{% endblock %}
 
 {% block body %}
     <main class="container main public-menu-page">
@@ -59,7 +60,7 @@
             </aside>
 
             <section>
-                <div class="menu-filter-message alert alert-warning d-none" role="alert"></div>
+                <div class="menu-filter-message alert alert-warning d-none" role="alert" aria-live="polite"></div>
 
                 <div class="public-menu-results js-menu-results" aria-label="Menus disponibles">
                 {% for menu in menus %}

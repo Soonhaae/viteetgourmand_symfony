@@ -12,6 +12,8 @@ function initPasswordToggles() {
 
     button.dataset.initialized = 'true';
     button.setAttribute('aria-pressed', 'false');
+    button.setAttribute('aria-controls', input.id);
+    button.setAttribute('aria-label', 'Afficher le mot de passe');
 
     button.addEventListener('click', () => {
       const isHidden = input.type === 'password';
@@ -19,6 +21,7 @@ function initPasswordToggles() {
       input.type = isHidden ? 'text' : 'password';
       button.textContent = isHidden ? 'masquer le mot de passe' : 'afficher le mot de passe';
       button.setAttribute('aria-pressed', String(isHidden));
+      button.setAttribute('aria-label', isHidden ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
     });
   });
 }
