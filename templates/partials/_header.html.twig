@@ -20,18 +20,6 @@
 
             {# --- PARTIE AUTH --- #}
 
-            {% if is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('app_admin_user_index') }}" class="topnav-link">
-                    admin
-                </a>
-            {% endif %}
-
-            {% if is_granted('ROLE_EMPLOYEE') %}
-                <a href="{{ path('app_gestion_commande_index') }}" class="topnav-link">
-                    gestion
-                </a>
-            {% endif %}
-
             {% if is_granted('ROLE_USER') %}
                 <a href="{{ path('app_account') }}" class="topnav-link">
                     <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
@@ -45,6 +33,10 @@
                     déconnexion
                 </a>
             {% else %}
+              <a href="{{ path('app_register') }}" class="topnav-link">
+                <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
+                inscription
+              </a>
                 <a href="{{ path('app_login') }}" class="topnav-link">
                     <img src="{{ asset('img/icons/account.svg') }}" class="icon-contact">
                     connexion
