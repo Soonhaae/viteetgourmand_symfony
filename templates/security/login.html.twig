@@ -37,6 +37,12 @@
                     se connecter
                 </button>
             </div>
+
+            {% if not app.user %}
+                <p class="mt-3 mb-0 text-center">
+                    Pas encore de compte ? <a href="{{ path('app_register') }}">Créer un compte</a>
+                </p>
+            {% endif %}
         </form>
     </main>
 {% endblock %}
