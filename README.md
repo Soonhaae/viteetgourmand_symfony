@@ -2,108 +2,154 @@
 
 Ce projet est une application web développée avec **Symfony 8** pour un traiteur, permettant la gestion des menus, des plats, des commandes et des utilisateurs.
 
-> Les instructions d'installation ci-dessous sont destinées à un environnement **Windows avec XAMPP**.
+## Installation avec Docker
 
-## Prérequis
+### Prérequis
 
-- **[XAMPP](https://www.apachefriends.org/)** (fournit PHP >= 8.4 et MySQL)
-- **[Composer](https://getcomposer.org/download/)**
-- **[Git](https://git-scm.com/)**
-
-### Activer les extensions PHP requises
-
-Ouvrir le fichier `php.ini` de XAMPP (par défaut `C:\xampp\php\php.ini`) et décommenter les lignes suivantes (supprimer le `;` en début de ligne) :
-
-```ini
-extension=pdo_mysql
-extension=intl
-extension=zip
-extension=curl
-```
-
-Redémarrer Apache depuis le panneau de contrôle XAMPP après modification.
-
-## Installation
-
-Les commandes ci-dessous sont à exécuter dans un terminal (**PowerShell** ou **invite de commandes**), depuis le dossier du projet.
+- Docker
+- Docker Compose
 
 ### 1. Cloner le dépôt
 
-```powershell
+```bash
 git clone https://github.com/Soonhaae/viteetgourmand_symfony.git
 cd viteetgourmand_symfony
 ```
 
-### 2. Installer les dépendances PHP
+### 2. Construire l'image et démarrer les services
 
-```powershell
-composer install
+Au premier lancement, ou après une modification du `Dockerfile` :
+
+```bash
+docker compose up --build -d
 ```
 
-### 3. Configurer la base de données
+### 3. Installer les dépendances PHP
 
-Créer un fichier `.env.local` à la racine (ce fichier est ignoré par git) et y renseigner l'URL de connexion à la base de données :
+```bash
+docker compose exec php composer install
+```
+
+### 4. Créer la base et exécuter les migrations
+
+(C'est ce que fait Heroku avec le `Procfile` mais en retirant --env=prod car on est en dev, et en ne faisant pas de cache:clear ni cache:warmup.)
+
+```bash
+docker compose exec -T php php bin/console doctrine:database:create --if-not-exists --no-interaction
+docker compose exec -T php php bin/console doctrine:migrations:migrate --no-interaction
+```
+
+### 5. Créer le schéma MongoDB
+
+Pour initialiser les collections utilisées par Doctrine ODM :
+
+```bash
+docker compose exec -T php php bin/console doctrine:mongodb:schema:create --no-interaction
+```
+
+Si vous devez repartir de zéro côté MongoDB :
+
+```bash
+docker compose exec -T php php bin/console doctrine:mongodb:schema:drop --force --no-interaction
+docker compose exec -T php php bin/console doctrine:mongodb:schema:create --no-interaction
+```
+
+### 6. Importer les données initiales
+
+Si vous voulez charger le fichier SQL fourni à la racine du projet :
+
+(Le fichier `viteetgourmand_symfony.sql` contient des `INSERT`. Si les tables sont deja remplies, il faut les vider avant l'import.)
+
+**Bash**
+
+```bash
+docker compose exec -T database sh -lc 'mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"' < viteetgourmand_symfony.sql
+```
+
+Attention : pas d'espace entre `-p` et le mot de passe.  
+
+**PowerShell**
+
+(quand `<` ne fonctionne pas)
+
+```powershell
+Get-Content viteetgourmand_symfony.sql | docker compose exec -T database sh -lc 'mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"'
+```
+
+### 7. Réinitialiser les volumes si besoin
+
+Cette commande supprime les conteneurs et les volumes MySQL et MongoDB du projet :
+
+```bash
+docker compose down -v
+```
+
+Puis relancer :
+
+```bash
+docker compose up -d
+```
+
+## Configuration locale des bases
+
+Symfony lit la configuration des bases via les variables d'environnement suivantes :
+
+- `DATABASE_URL` pour MySQL/Doctrine ORM
+- `MONGODB_URL` pour MongoDB/Doctrine ODM
+- `MONGODB_DB` pour le nom de la base MongoDB
+
+Les valeurs de dev utilisées par Docker sont les suivantes :
 
 ```dotenv
-DATABASE_URL="mysql://root:@127.0.0.1:3306/viteetgourmand?serverVersion=8.0&charset=utf8mb4"
+DATABASE_URL="mysql://app:app_dev_password@database:3306/app?serverVersion=8.0&charset=utf8mb4"
+MONGODB_URL="mongodb://mongo_root:mongo_root_password@mongodb:27017/?authSource=admin"
+MONGODB_DB="app_mongo"
+MYSQL_DATABASE=app
+MYSQL_USER=app
+MYSQL_PASSWORD=app_dev_password
+MYSQL_ROOT_PASSWORD=root_dev_password
+MONGODB_USERNAME=mongo_root
+MONGODB_PASSWORD=mongo_root_password
 ```
 
-> Avec XAMPP, le compte `root` sans mot de passe est standard. Si votre configuration est différente, adaptez les identifiants.
+Si vous créez un fichier `.env.local`, ces valeurs peuvent y être redéfinies pour pointer vers une autre instance locale.
 
-### 4. Créer la base de données et jouer les migrations
+### Connexion DBeaver
 
-Démarrer **MySQL** depuis le panneau de contrôle XAMPP, puis exécuter :
+Pour consulter la base MySQL locale avec DBeaver :
 
-```powershell
-php bin/console doctrine:database:create
-php bin/console doctrine:migrations:migrate
-```
+- **Host** : `localhost`
+- **Port** : `3306`
+- **Database** : `app`
+- **User** : `app`
+- **Password** : `app_dev_password`
 
-### 5. (Optionnel) Insérer des données initiales
+Si DBeaver affiche l'erreur **Public Key Retrieval is not allowed** :
 
-Un fichier `viteetgourmand_symfony.sql` est disponible à la racine pour pré-remplir la base. Depuis PowerShell :
+- Ouvrir la connexion puis aller dans **Driver properties**
+- Mettre **allowPublicKeyRetrieval** a `true`
+- Éventuellement, mettre **useSSL** a `false` (ou **sslMode** a `DISABLED` selon le driver)
+- Enregistrer puis relancer **Test Connection**
 
-```powershell
-Get-Content viteetgourmand_symfony.sql | mysql -u root viteetgourmand
-```
+Compte administrateur MySQL optionnel :
 
-### 6. Lancer le serveur de développement
+- **User** : `root`
+- **Password** : `root_dev_password`
 
-```powershell
-php -S localhost:8000 -t public/
-```
+### Connexion MongoDB Compass
 
-L'application est accessible à l'adresse : [http://localhost:8000](http://localhost:8000)
+Pour consulter la base MongoDB locale avec MongoDB Compass :
 
-## Structure du projet
+- **Host** : `localhost`
+- **Port** : `27017`
+- **Authentication** : `Username / Password`
+- **Username** : `mongo_root`
+- **Password** : `mongo_root_password`
+- **Authentication Database** : `admin`
 
-| Dossier / Fichier | Rôle |
-|---|---|
-| `src/Controller/` | Contrôleurs (index, menus, compte, inscription, sécurité, admin) |
-| `src/Entity/` | Entités Doctrine : `Plat`, `Menu`, `Commande`, `User`, `Allergene`, `Regime`, `Image` |
-| `src/Form/` | Formulaires Symfony |
-| `src/Repository/` | Repositories Doctrine |
-| `templates/` | Templates Twig |
-| `migrations/` | Migrations Doctrine |
-| `public/` | Point d'entrée web (`index.php`) |
-| `assets/` | Assets front-end (CSS, JS) |
+URI de connexion : `mongodb://mongo_root:mongo_root_password@localhost:27017/?authSource=admin`
 
-## Déploiement sur Heroku
+## Accès
 
-1. Sur le tableau de bord Heroku :
-   - Lier le dépôt GitHub https://github.com/Soonhaae/viteetgourmand_symfony (onglet *Deploy*)
-   - Ajouter la variable `APP_ENV=prod` (onglet *Settings > Config Vars*)
-   - Ajouter le add-on **JawsDB MySQL** (onglet *Resources*)
-   - Une fois JawsDB provisionné, copier la valeur de `JAWSDB_URL` et créer une variable `DATABASE_URL` avec la même valeur
+- Application Symfony : http://localhost:8080
 
-2. Déployer manuellement depuis la branche `main`.  
-   Le `Procfile` exécute automatiquement les migrations Doctrine, ce qui crée les tables en base.
-
-3. Insérer les données initiales en base via la commande `mysql` :
-
-```powershell
-Get-Content INSERT.sql | mysql -h <host> -P <port> -u <username> -p<password> <database>
-```
-
-> Attention : pas d'espace entre `-p` et le mot de passe.  
-> Les informations de connexion sont disponibles sur la page du add-on JawsDB (onglet *Resources*, cliquer sur *JawsDB MySQL*), ou en décomposant la `DATABASE_URL` : `mysql://username:password@host:port/database`.
