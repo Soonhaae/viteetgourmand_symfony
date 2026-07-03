@@ -10,10 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/menu')]
 final class MenuController extends AbstractController
 {
+    #[IsGranted('ROLE_EMPLOYEE')]
     #[Route(name: 'app_menu_index', methods: ['GET'])]
     public function index(MenuRepository $menuRepository): Response
     {
@@ -22,6 +24,7 @@ final class MenuController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_EMPLOYEE')]
     #[Route('/new', name: 'app_menu_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -50,6 +53,7 @@ final class MenuController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_EMPLOYEE')]
     #[Route('/{id}/edit', name: 'app_menu_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
     {
@@ -70,6 +74,7 @@ final class MenuController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_EMPLOYEE')]
     #[Route('/{id}', name: 'app_menu_delete', methods: ['POST'])]
     public function delete(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
     {
