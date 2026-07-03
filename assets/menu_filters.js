@@ -65,7 +65,10 @@ function renderMenu(menu) {
         <p class="public-menu-meta">
           ${escapeHtml(menu.minPersons)} pers. min. · ${escapeHtml(menu.price)} € · stock : ${escapeHtml(menu.stockAvailable)}
         </p>
-        <a href="${escapeHtml(menu.orderUrl)}" class="btn btn-primary">commander</a>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="${escapeHtml(menu.detailUrl)}" class="btn btn-outline-secondary">voir le détail</a>
+                    <a href="${escapeHtml(menu.orderUrl)}" class="btn btn-primary">commander</a>
+                </div>
       </div>
     </article>
   `;

@@ -76,7 +76,10 @@
                             <p class="public-menu-meta">
                                 {{ menu.minPersons }} pers. min. · {{ menu.price }} € · stock : {{ menu.stockAvailable }}
                             </p>
-                            <a href="{{ path('app_commande_new', {'id': menu.id}) }}" class="btn btn-primary">commander</a>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a href="{{ path('app_menu_show', {'id': menu.id}) }}" class="btn btn-outline-secondary">voir le détail</a>
+                                <a href="{{ path('app_commande_new', {'id': menu.id}) }}" class="btn btn-primary">commander</a>
+                            </div>
                         </div>
                     </article>
                 {% else %}
