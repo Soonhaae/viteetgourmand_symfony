@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+<main class="container main management-page">
+    <div class="management-card">
+
+        <h1 class="mb-4">Statistiques</h1>
+
+        {# ── Filtres ───────────────────────────────────────────── #}
+        <form class="js-stats-filters row g-2 align-items-end mb-4"
+              method="get"
+              action="{{ path('app_gestion_statistiques') }}"
+              data-filter-url="{{ path('app_gestion_statistiques_resultat') }}">
+            <div class="col-md-4">
+                <label for="f-menu" class="form-label small text-muted">Menu</label>
+                <select id="f-menu" name="menuId" class="form-select">
+                    <option value="">Tous les menus</option>
+                    {% for menu in menus %}
+                        <option value="{{ menu.id }}" {{ filtre.menuId == menu.id ? 'selected' : '' }}>{{ menu.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="f-mois" class="form-label small text-muted">Mois</label>
+                <select id="f-mois" name="mois" class="form-select">
+                    <option value="">Tous les mois</option>
+                    {% set moisLabels = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] %}
+                    {% for m in 1..12 %}
+                        <option value="{{ m }}" {{ filtre.mois == m ? 'selected' : '' }}>{{ moisLabels[m - 1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="f-annee" class="form-label small text-muted">Année</label>
+                <input id="f-annee" type="number" name="annee" class="form-control"
+                       value="{{ filtre.annee }}" min="2020" max="2099">
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="reset" class="btn btn-outline-secondary">Réinitialiser</button>
+            </div>
+        </form>
+
+        {# ── Résultat ──────────────────────────────────────────── #}
+        <div class="row g-3 mb-5">
+            <div class="col-sm-6 col-lg-4">
+                <div class="rounded border px-4 py-3">
+                    <p class="text-muted small mb-1">Commandes</p>
+                    <p id="stat-nb-commandes" class="fs-1 fw-bold mb-0">{{ resultat.nbCommandes }}</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="rounded border px-4 py-3">
+                    <p class="text-muted small mb-1">Chiffre d'affaires</p>
+                    <p id="stat-ca" class="fs-1 fw-bold mb-0">{{ resultat.chiffreAffaires|number_format(2, ',', "\u00a0") }}&nbsp;€</p>
+                </div>
+            </div>
+        </div>
+
+        {# ── Graphique 12 derniers mois ─────────────────────────── #}
+        {# ── Graphique 12 derniers mois ─────────────────────────── #}
+        {% if chartMois.hasData %}
+        <div style="position: relative; height: 320px;">
+            <canvas id="chart-mois"></canvas>
+        </div>
+        <script>
+        new Chart(document.getElementById('chart-mois'), {
+            type: 'line',
+            data: {{ chartMois.chartData|json_encode|raw }},
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function (ctx) {
+                                var n = ctx.parsed.y;
+                                return ctx.dataset.label + '\u00a0: ' + n + ' commande' + (n > 1 ? 's' : '');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0 },
+                        title: { display: true, text: 'Commandes' }
+                    }
+                }
+            }
+        });
+        </script>
+        {% else %}
+        <p class="text-muted">Aucune donnée disponible pour les 12 derniers mois.</p>
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}

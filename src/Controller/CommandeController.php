@@ -12,6 +12,9 @@ use App\Form\CommandeDeliveryType;
 use App\Form\CommandeEditType;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
+use App\Document\StatistiquesMenu;
+use App\Repository\StatistiquesMenuRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -95,7 +98,7 @@ final class CommandeController extends AbstractController
     }
 
     #[Route('/nouvelle/{id}/livraison', name: 'app_commande_delivery', methods: ['GET', 'POST'])]
-    public function delivery(Request $request, Menu $menu, EntityManagerInterface $entityManager): Response
+    public function delivery(Request $request, Menu $menu, EntityManagerInterface $entityManager, DocumentManager $dm): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -152,6 +155,20 @@ final class CommandeController extends AbstractController
                 $entityManager->persist($commande);
                 $entityManager->flush();
 
+                // Mise à jour des statistiques MongoDB
+                /** @var StatistiquesMenuRepository $statsRepo */
+                $statsRepo = $dm->getRepository(StatistiquesMenu::class);
+                $mois      = (int) $commande->getDate()->format('n');
+                $annee     = (int) $commande->getDate()->format('Y');
+                $statDoc   = $statsRepo->findOneByMenuMois($menu->getId(), $mois, $annee);
+                if ($statDoc === null) {
+                    $statDoc = new StatistiquesMenu($menu->getId(), $menu->getTitle(), $commande->getDate());
+                    $dm->persist($statDoc);
+                }
+                $statDoc->setNbCommandes($statDoc->getNbCommandes() + 1);
+                $statDoc->setChiffreAffaires(round($statDoc->getChiffreAffaires() + (float) $commande->getTotalPrice(), 2));
+                $dm->flush();
+
                 $request->getSession()->remove($sessionKey);
                 $this->addFlash('success', 'Votre commande a bien été enregistrée.');
 
@@ -169,7 +186,7 @@ final class CommandeController extends AbstractController
     }
 
     #[Route('/{id}/modifier', name: 'app_commande_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Commande $commande, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Commande $commande, EntityManagerInterface $entityManager, DocumentManager $dm): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $this->denyAccessToOtherCustomerOrder($commande);
@@ -191,6 +208,7 @@ final class CommandeController extends AbstractController
             } else {
                 $menuTotalPrice = $this->calculateMenuTotalPrice($commande->getMenu(), $commande->getNbPers());
                 $deliveryPrice = $this->calculateDeliveryPrice($commande);
+                $ancienPrix = (float) $commande->getTotalPrice();
 
                 $commande
                     ->setDeliveryPrice($deliveryPrice)
@@ -199,6 +217,20 @@ final class CommandeController extends AbstractController
 
                 $commande->getMenu()->setStockAvailable($commande->getMenu()->getStockAvailable() - $stockDifference);
                 $entityManager->flush();
+
+                // Mise à jour des statistiques MongoDB
+                $diff = (float) $commande->getTotalPrice() - $ancienPrix;
+                if ($diff !== 0.0) {
+                    /** @var StatistiquesMenuRepository $statsRepo */
+                    $statsRepo = $dm->getRepository(StatistiquesMenu::class);
+                    $mois      = (int) $commande->getDate()->format('n');
+                    $annee     = (int) $commande->getDate()->format('Y');
+                    $statDoc   = $statsRepo->findOneByMenuMois($commande->getMenu()->getId(), $mois, $annee);
+                    if ($statDoc !== null) {
+                        $statDoc->setChiffreAffaires(max(0.0, round($statDoc->getChiffreAffaires() + $diff, 2)));
+                        $dm->flush();
+                    }
+                }
 
                 $this->addFlash('success', 'Votre commande a bien été modifiée.');
 
@@ -214,7 +246,7 @@ final class CommandeController extends AbstractController
     }
 
     #[Route('/{id}/annuler', name: 'app_commande_cancel', methods: ['POST'])]
-    public function cancel(Request $request, Commande $commande, EntityManagerInterface $entityManager): Response
+    public function cancel(Request $request, Commande $commande, EntityManagerInterface $entityManager, DocumentManager $dm): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $this->denyAccessToOtherCustomerOrder($commande);
@@ -224,6 +256,18 @@ final class CommandeController extends AbstractController
             $commande->setStatus(self::STATUS_CANCELLED);
             $commande->getMenu()->setStockAvailable($commande->getMenu()->getStockAvailable() + $commande->getNbPers());
             $entityManager->flush();
+
+            // Mise à jour des statistiques MongoDB
+            /** @var StatistiquesMenuRepository $statsRepo */
+            $statsRepo = $dm->getRepository(StatistiquesMenu::class);
+            $mois      = (int) $commande->getDate()->format('n');
+            $annee     = (int) $commande->getDate()->format('Y');
+            $statDoc   = $statsRepo->findOneByMenuMois($commande->getMenu()->getId(), $mois, $annee);
+            if ($statDoc !== null) {
+                $statDoc->setNbCommandes(max(0, $statDoc->getNbCommandes() - 1));
+                $statDoc->setChiffreAffaires(max(0.0, round($statDoc->getChiffreAffaires() - (float) $commande->getTotalPrice(), 2)));
+                $dm->flush();
+            }
         }
 
         return $this->redirectToRoute('app_commande_index', [], Response::HTTP_SEE_OTHER);

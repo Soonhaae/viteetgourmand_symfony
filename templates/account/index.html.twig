@@ -21,6 +21,7 @@
 
                 {% if is_granted('ROLE_ADMIN') %}
                     <a class="btn btn-outline-secondary" href="{{ path('app_admin_user_index') }}">administration utilisateurs</a>
+                    <a class="btn btn-outline-secondary" href="{{ path('app_gestion_statistiques') }}">statistiques</a>
                 {% endif %}
             </div>
         </div>
